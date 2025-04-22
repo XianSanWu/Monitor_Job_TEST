@@ -1,0 +1,98 @@
+# 排除 bin 和 obj 目錄
+bin/
+obj/
+.vs/
+
+# 排除LOG
+log/
+logs/
+**/log/
+**/logs/
+
+
+## .NET
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]eploy/
+[Dd]ebug-x86/
+[Dd]ebug-x64/
+[Dd]ebug-AnyCPU/
+[Dd]ebug-AnyCPU_PUBLIC/
+[Dd]Release/
+[Dd]Release-x86/
+[Dd]Release-x64/
+[Dd]Release-AnyCPU/
+[Dd]Release-AnyCPU_PUBLIC/
+x64/
+x86/
+arm/
+arm64/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# User-specific files
+.vs2019/
+.vs2017/
+.vscode/
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer Database files
+*.sql
+
+# Windows Installer & Windows Package Management
+*.wixpdb
+*.wixproj
+*.msbuild
+
+# User-specific files (Windows)
+Thumbs.db
+ehthumbs.db
+
+# Windows Installer package files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer & Windows Package Management
+*.wixpdb
+*.wixproj
+*.msbuild
+
+# .NET Core files
+project.lock.json
+project.json
+artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# .NET generated files
+.vscode/
+
+# Test results
+[Tt]estResults/
+coverage/
+
+# JetBrains Rider
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# User-specific files
+.vs/
+.vscode/
+.idea/
