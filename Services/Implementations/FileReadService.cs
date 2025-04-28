@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.Dto.Responses;
 using Services.Interfaces;
@@ -9,9 +10,13 @@ using System.Text.RegularExpressions;
 using Utilities.LogHelper;
 using Utilities.Utilities;
 
-public class FileService(ILogger<FileService> logger) : IFileService
+public class FileService(
+    ILogger<FileService> logger,
+    IConfiguration config
+    ) : IFileService
 {
     private readonly ILogger<FileService> _logger = logger;
+    private readonly IConfiguration _config = config;
 
     #region///1. 從資料夾 A 複製今日的檔案到資料夾 B 2. 只複製名稱開頭符合指定字串(StartsWith) 3. 若資料夾 B 不存在則建立 4. 如果今天過了，刪除 B 資料夾內的昨日檔案
     /// <summary>
@@ -24,7 +29,6 @@ public class FileService(ILogger<FileService> logger) : IFileService
     /// <param name="sourcePath"></param>
     /// <param name="targetPath"></param>
     /// <param name="startsWithFileName"></param>
-    /// <param name="_config"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<bool> CopyTodayFilesAsync(
@@ -32,7 +36,6 @@ public class FileService(ILogger<FileService> logger) : IFileService
         string sourcePath,
         string targetPath,
         string startsWithFileName,
-        IConfiguration _config,
         CancellationToken cancellationToken
         )
     {
@@ -167,14 +170,12 @@ public class FileService(ILogger<FileService> logger) : IFileService
     /// <param name="jobGuid"></param>
     /// <param name="directory"></param>
     /// <param name="startsWithFileName"></param>
-    /// <param name="_config"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>每個檔案文字內容</returns>
     public async Task<string?> GetTodayFileContentAsync(
         string jobGuid,
         string directory,
         string startsWithFileName,
-        IConfiguration _config,
         CancellationToken cancellationToken
         )
     {
@@ -252,14 +253,12 @@ public class FileService(ILogger<FileService> logger) : IFileService
     /// <param name="jobGuid"></param>
     /// <param name="directory"></param>
     /// <param name="startsWithFileName"></param>
-    /// <param name="_config"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<string?> GetFileContentChunkAsync(
         string jobGuid,
         string directory,
         string startsWithFileName,
-        IConfiguration _config,
         CancellationToken cancellationToken
     )
     {
@@ -394,14 +393,12 @@ public class FileService(ILogger<FileService> logger) : IFileService
     /// <param name="jobGuid"></param>
     /// <param name="directory"></param>
     /// <param name="startsWithFileName"></param>
-    /// <param name="_config"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<List<string>?> GetFileContentChunkListAsync(
         string jobGuid,
         string directory,
         string startsWithFileName,
-        IConfiguration _config,
         CancellationToken cancellationToken
     )
     {
@@ -555,10 +552,9 @@ public class FileService(ILogger<FileService> logger) : IFileService
     /// </summary>
     /// <param name="jobGuid"></param>
     /// <param name="logContent">文字內容</param>
-    /// <param name="_config"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>寫入完成之序號</returns>
-    public async Task<MailhunterLogParseResponse> MailhunterLogParseLogAsync(string jobGuid, string logContent, IConfiguration _config, CancellationToken cancellationToken)
+    public async Task<MailhunterLogParseResponse> MailhunterLogParseLogAsync(string jobGuid, string logContent, CancellationToken cancellationToken)
     {
         var logSource = $"【{jobGuid}】" + LogHelper.Build<FileService>();
         _logger.LogInformation($"{logSource} 程式執行開始");
@@ -636,7 +632,6 @@ public class FileService(ILogger<FileService> logger) : IFileService
     public async Task<MailhunterLogParseResponse> MailhunterLogParseLogListAsync(
         string jobGuid,
         List<string> logContentList,
-        IConfiguration _config,
         CancellationToken cancellationToken
         )
     {

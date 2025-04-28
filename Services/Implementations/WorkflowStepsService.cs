@@ -13,18 +13,19 @@ namespace Services.Implementations
 {
     public class WorkflowStepsService(
         ILogger<WorkflowStepsService> logger,
+        IConfiguration config,
         IMapper mapper) : IWorkflowStepsService
     {
         private readonly ILogger<WorkflowStepsService> _logger = logger;
+        private readonly IConfiguration _config = config;
 
         /// <summary>
         /// 工作進度查詢
         /// </summary>
         /// <param name="searchReq"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest searchReq, IConfiguration _config, CancellationToken cancellationToken = default)
+        public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest searchReq, CancellationToken cancellationToken = default)
         {
             #region 參數宣告
             var result = new WorkflowStepsSearchListResponse();
@@ -50,10 +51,9 @@ namespace Services.Implementations
         /// </summary>
         /// <param name="fieldReq"></param>
         /// <param name="conditionReq"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateWorkflowList(WorkflowStepsUpdateFieldRequest fieldReq, List<WorkflowStepsUpdateConditionRequest> conditionReq, IConfiguration _config, CancellationToken cancellationToken)
+        public async Task<bool> UpdateWorkflowList(WorkflowStepsUpdateFieldRequest fieldReq, List<WorkflowStepsUpdateConditionRequest> conditionReq, CancellationToken cancellationToken)
         {
             #region 參數宣告
             var result = false;

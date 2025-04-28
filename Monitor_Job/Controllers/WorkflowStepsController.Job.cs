@@ -35,7 +35,7 @@ namespace JobScheduling.Controllers
             if (string.IsNullOrWhiteSpace(startsWithFileName))
                 startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
 
-            var result = await _fileService.CopyTodayFilesAsync(jobGuid, sourcePath, targetPath, startsWithFileName, _config, cancellationToken).ConfigureAwait(false);
+            var result = await _fileService.CopyTodayFilesAsync(jobGuid, sourcePath, targetPath, startsWithFileName, cancellationToken).ConfigureAwait(false);
             return SuccessResult(result);
         }
 
@@ -63,7 +63,7 @@ namespace JobScheduling.Controllers
             if (string.IsNullOrWhiteSpace(startsWithFileName))
                 startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
 
-            var result = await _fileService.GetTodayFileContentAsync(jobGuid, directory, startsWithFileName, _config, cancellationToken).ConfigureAwait(false) ?? "";
+            var result = await _fileService.GetTodayFileContentAsync(jobGuid, directory, startsWithFileName, cancellationToken).ConfigureAwait(false) ?? "";
             return SuccessResult(result);
         }
 
@@ -90,7 +90,7 @@ namespace JobScheduling.Controllers
             if (string.IsNullOrWhiteSpace(startsWithFileName))
                 startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
 
-            string result = await _fileService.GetFileContentChunkAsync(jobGuid, directory, startsWithFileName, _config, cancellationToken) ?? "";
+            string result = await _fileService.GetFileContentChunkAsync(jobGuid, directory, startsWithFileName, cancellationToken) ?? "";
 
             return SuccessResult(result);
         }
@@ -120,7 +120,7 @@ namespace JobScheduling.Controllers
             if (string.IsNullOrWhiteSpace(startsWithFileName))
                 startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
 
-            var result = await _fileService.GetFileContentChunkListAsync(jobGuid, directory, startsWithFileName, _config, cancellationToken).ConfigureAwait(false) ?? new List<string>();
+            var result = await _fileService.GetFileContentChunkListAsync(jobGuid, directory, startsWithFileName, cancellationToken).ConfigureAwait(false) ?? new List<string>();
 
             return SuccessResult(result);
         }
@@ -139,7 +139,7 @@ namespace JobScheduling.Controllers
 
             var result = new MailhunterLogParseResponse();
 
-            result = await _fileService.MailhunterLogParseLogAsync(jobGuid, request.LogContent ?? "", _config, cancellationToken).ConfigureAwait(false);
+            result = await _fileService.MailhunterLogParseLogAsync(jobGuid, request.LogContent ?? "", cancellationToken).ConfigureAwait(false);
 
             return SuccessResult(result);
         }
@@ -163,7 +163,7 @@ namespace JobScheduling.Controllers
 
             //request.LogContentList = await _fileService.GetFileContentChunkListAsync(directory, startsWithFileName, _config, cancellationToken).ConfigureAwait(false) ?? new List<string>();
 
-            result = await _fileService.MailhunterLogParseLogListAsync(jobGuid, request.LogContentList ?? new List<string>(), _config, cancellationToken).ConfigureAwait(false);
+            result = await _fileService.MailhunterLogParseLogListAsync(jobGuid, request.LogContentList ?? new List<string>(), cancellationToken).ConfigureAwait(false);
             return SuccessResult(result);
         }
 

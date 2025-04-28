@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Models.Dto.Responses;
+﻿using Models.Dto.Responses;
 
 namespace Services.Interfaces
 {
@@ -15,10 +14,9 @@ namespace Services.Interfaces
         /// <param name="sourcePath"></param>
         /// <param name="targetPath"></param>
         /// <param name="startsWithFileName"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> CopyTodayFilesAsync(string jobGuid, string sourcePath, string targetPath, string startsWithFileName, IConfiguration _config, CancellationToken cancellationToken);
+        Task<bool> CopyTodayFilesAsync(string jobGuid, string sourcePath, string targetPath, string startsWithFileName, CancellationToken cancellationToken);
 
         #region 不要用，檔案過大字串會被截斷
         /// <summary>
@@ -27,10 +25,9 @@ namespace Services.Interfaces
         /// <param name="jobGuid"></param>
         /// <param name="directory"></param>
         /// <param name="startsWithFileName"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>每個檔案文字內容</returns>
-        Task<string?> GetTodayFileContentAsync(string jobGuid, string directory, string startsWithFileName, IConfiguration _config, CancellationToken cancellationToken);
+        Task<string?> GetTodayFileContentAsync(string jobGuid, string directory, string startsWithFileName, CancellationToken cancellationToken);
 
         /// <summary>
         /// (不要用，檔案過大字串會被截斷) 分段處理 取得當天日期，指定位置，指定檔案(startsWithFileName名稱)檔案內容
@@ -38,10 +35,9 @@ namespace Services.Interfaces
         /// <param name="jobGuid"></param>
         /// <param name="directory"></param>
         /// <param name="startsWithFileName"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<string?> GetFileContentChunkAsync(string jobGuid, string directory, string startsWithFileName, IConfiguration _config, CancellationToken cancellationToken);
+        Task<string?> GetFileContentChunkAsync(string jobGuid, string directory, string startsWithFileName, CancellationToken cancellationToken);
         #endregion
 
         /// <summary>
@@ -50,30 +46,27 @@ namespace Services.Interfaces
         /// <param name="jobGuid"></param>
         /// <param name="directory"></param>
         /// <param name="startsWithFileName"></param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<List<string>?> GetFileContentChunkListAsync(string jobGuid, string directory, string startsWithFileName, IConfiguration _config, CancellationToken cancellationToken);
+        Task<List<string>?> GetFileContentChunkListAsync(string jobGuid, string directory, string startsWithFileName, CancellationToken cancellationToken);
 
         /// <summary>
         /// 拆解文字檔，找出段落
         /// </summary>
         /// <param name="jobGuid"></param>
         /// <param name="logContent">文字內容</param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>寫入完成之序號</returns>
-        Task<MailhunterLogParseResponse> MailhunterLogParseLogAsync(string jobGuid, string logContent, IConfiguration _config, CancellationToken cancellationToken);
+        Task<MailhunterLogParseResponse> MailhunterLogParseLogAsync(string jobGuid, string logContent, CancellationToken cancellationToken);
 
         /// <summary>
         /// 拆解List文字檔，找出段落
         /// </summary>
         /// <param name="jobGuid"></param>
         /// <param name="logContentList">文字內容</param>
-        /// <param name="_config"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>寫入完成之序號</returns>
-        Task<MailhunterLogParseResponse> MailhunterLogParseLogListAsync(string jobGuid, List<string> logContentList, IConfiguration _config, CancellationToken cancellationToken);
+        Task<MailhunterLogParseResponse> MailhunterLogParseLogListAsync(string jobGuid, List<string> logContentList, CancellationToken cancellationToken);
     }
 
 }
