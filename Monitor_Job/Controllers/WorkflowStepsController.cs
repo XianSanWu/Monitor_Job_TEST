@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Services.Interfaces;
 
-namespace JobScheduling.Controllers
+namespace WebApi.Controllers
 {
     public partial class WorkflowStepsController(
        IConfiguration config,
        IMapper mapper,
        ILogger<WorkflowStepsController> logger,
+       IMailService mailService,
        IWorkflowStepsService workflowStepsService,
        IFileService fileService
        )
@@ -16,6 +17,7 @@ namespace JobScheduling.Controllers
         private readonly ILogger<WorkflowStepsController> _logger = logger;
         private readonly IWorkflowStepsService _workflowStepsService = workflowStepsService;
         private readonly IFileService _fileService = fileService;
+        private readonly IMailService _mailService = mailService;
         #endregion
     }
 }

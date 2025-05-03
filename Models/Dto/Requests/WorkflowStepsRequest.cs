@@ -67,7 +67,7 @@ namespace Models.Dto.Requests
             public string? UploadFileName { get; set; }
 
             /// <summary>狀態</summary>
-            public string? Status { get; set; }
+            public string? ProgressStatus { get; set; }
 
             /// <summary>建立時間</summary>
             public DateTime CreateAt { get; set; }
@@ -94,61 +94,61 @@ namespace Models.Dto.Requests
         public class WorkflowStepsUpdateConditionRequest : BaseConditionModel
         {
             /// <summary>主鍵</summary>
-            public FieldWithMetadataModel<int> SN { get; set; } = new();
+            public FieldWithMetadataModel SN { get; set; } = new();
 
             /// <summary>工作流程唯一識別碼</summary>
-            public FieldWithMetadataModel<string> WorkflowUuid { get; set; } = new();
+            public FieldWithMetadataModel WorkflowUuid { get; set; } = new();
 
             /// <summary>發送 UUID</summary>
-            public FieldWithMetadataModel<string> SendUuid { get; set; } = new();
+            public FieldWithMetadataModel SendUuid { get; set; } = new();
 
             /// <summary>批次 ID</summary>
-            public FieldWithMetadataModel<string> BatchId { get; set; } = new();
+            public FieldWithMetadataModel BatchId { get; set; } = new();
 
             /// <summary>旅程 ID</summary>
-            public FieldWithMetadataModel<string> ActivityId { get; set; } = new();
+            public FieldWithMetadataModel ActivityId { get; set; } = new();
 
             /// <summary>旅程名稱</summary>
-            public FieldWithMetadataModel<string> ActivityName { get; set; } = new();
+            public FieldWithMetadataModel ActivityName { get; set; } = new();
 
             /// <summary>旅程狀態</summary>
-            public FieldWithMetadataModel<string> ActivityStatus { get; set; } = new();
+            public FieldWithMetadataModel ActivityStatus { get; set; } = new();
 
             /// <summary>節點 ID</summary>
-            public FieldWithMetadataModel<string> NodeId { get; set; } = new();
+            public FieldWithMetadataModel NodeId { get; set; } = new();
 
             /// <summary>節點名稱</summary>
-            public FieldWithMetadataModel<string> NodeName { get; set; } = new();
+            public FieldWithMetadataModel NodeName { get; set; } = new();
 
-            /// <summary>通道 (Email / SMS)</summary>
-            public FieldWithMetadataModel<string> Channel { get; set; } = new();
+            /// <summary>通道 (EDM / SMS / APP_PUSH)</summary>
+            public FieldWithMetadataModel Channel { get; set; } = new();
 
-            /// <summary>通道類型 (EDM / 簡訊)</summary>
-            public FieldWithMetadataModel<string> ChannelType { get; set; } = new();
+            /// <summary>通道類型 (旅程 / 群發)</summary>
+            public FieldWithMetadataModel ChannelType { get; set; } = new();
 
             /// <summary>上傳檔名</summary>
-            public FieldWithMetadataModel<string> UploadFileName { get; set; } = new();
+            public FieldWithMetadataModel UploadFileName { get; set; } = new();
 
             /// <summary>狀態</summary>
-            public FieldWithMetadataModel<string> Status { get; set; } = new();
+            public FieldWithMetadataModel Status { get; set; } = new();
 
             /// <summary>建立時間</summary>
-            public FieldWithMetadataModel<DateTime> CreateAt { get; set; } = new();
+            public FieldWithMetadataModel CreateAt { get; set; } = new();
 
             /// <summary>更新時間</summary>
-            public FieldWithMetadataModel<DateTime> UpdateAt { get; set; } = new();
+            public FieldWithMetadataModel UpdateAt { get; set; } = new();
 
             /// <summary>旅程建立時間</summary>
-            public FieldWithMetadataModel<DateTime> JourneyCreateAt { get; set; } = new();
+            public FieldWithMetadataModel JourneyCreateAt { get; set; } = new();
 
             /// <summary>旅程更新時間</summary>
-            public FieldWithMetadataModel<DateTime> JourneyUpdateAt { get; set; } = new();
+            public FieldWithMetadataModel JourneyUpdateAt { get; set; } = new();
 
             /// <summary>群發建立時間</summary>
-            public FieldWithMetadataModel<DateTime> GroupSendCreateAt { get; set; } = new();
+            public FieldWithMetadataModel GroupSendCreateAt { get; set; } = new();
 
             /// <summary>群發更新時間</summary>
-            public FieldWithMetadataModel<DateTime> GroupSendUpdateAt { get; set; } = new();
+            public FieldWithMetadataModel GroupSendUpdateAt { get; set; } = new();
         }
         #endregion
 

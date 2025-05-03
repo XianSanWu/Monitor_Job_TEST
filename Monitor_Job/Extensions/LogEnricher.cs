@@ -2,7 +2,7 @@
 using Serilog.Events;
 using System.Diagnostics;
 
-namespace JobScheduling.Extensions
+namespace WebApi.Extensions
 {
     /// <summary>
     /// 客製化 Log 內容

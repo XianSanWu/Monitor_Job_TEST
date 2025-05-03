@@ -4,7 +4,7 @@ using Services.Interfaces;
 using Services.Job.Interfaces;
 using System.ComponentModel;
 
-namespace JobScheduling.Job
+namespace WebApi.Job
 {
     [ManagementPage(MenuName = "Update Workflow Status Job", Title = "更新工作流程狀態")]
     public class UpdateWorkflowStatusJob(
@@ -37,7 +37,7 @@ namespace JobScheduling.Job
                 _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusJob Job 開始執行");
 
                 // Step 1: Copy today's file
-                var copySuccess = await _fileService.CopyTodayFilesAsync(jobGuid, CopySourcePath, CopyTargetPath, SendBatchFileName, _config, cancellationToken).ConfigureAwait(false);
+                var copySuccess = await _fileService.CopyTodayFilesAsync(jobGuid, CopySourcePath, CopyTargetPath, SendBatchFileName, cancellationToken).ConfigureAwait(false);
                 if (!copySuccess)
                 {
                     _logger.LogWarning($"【{jobGuid}】CopyTodayFilesAsync 失敗，來源: {CopySourcePath}，目標: {CopyTargetPath}");
@@ -45,7 +45,7 @@ namespace JobScheduling.Job
                 }
 
                 // Step 2: Read content
-                var chunks = await _fileService.GetFileContentChunkListAsync(jobGuid, CopyTargetPath, SendBatchFileName, _config, cancellationToken).ConfigureAwait(false);
+                var chunks = await _fileService.GetFileContentChunkListAsync(jobGuid, CopyTargetPath, SendBatchFileName, cancellationToken).ConfigureAwait(false);
                 if (chunks is null || chunks?.Count == 0)
                 {
                     _logger.LogWarning($"【{jobGuid}】GetFileContentChunkListAsync 回傳空，路徑: {CopyTargetPath}，檔名: {SendBatchFileName}");
@@ -53,7 +53,7 @@ namespace JobScheduling.Job
                 }
 
                 // Step 3: Parse content
-                var parsedLogs = await _fileService.MailhunterLogParseLogListAsync(jobGuid, chunks ?? [], _config, cancellationToken).ConfigureAwait(false);
+                var parsedLogs = await _fileService.MailhunterLogParseLogListAsync(jobGuid, chunks ?? [], cancellationToken).ConfigureAwait(false);
                 if (parsedLogs is null || parsedLogs.CompletedJobs.Count == 0)
                 {
                     _logger.LogWarning($"【{jobGuid}】MailhunterLogParseLogListAsync 無法解析 chunk list");

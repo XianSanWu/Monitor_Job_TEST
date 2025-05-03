@@ -1,26 +1,25 @@
-﻿using JobScheduling.Extensions;
+﻿using WebApi.Extensions;
 using Serilog;
 using Serilog.Events;
 using Services.Interfaces;
-using JobScheduling.Profile;
+using WebApi.Profile;
 using FluentValidation;
 using System.Reflection;
 using HealthChecks.UI.Client;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using JobScheduling.Filters;
+using WebApi.Filters;
 using static Utilities.Extensions.JsonExtension;
-using static JobScheduling.Filters.ExceptionHandleActionFilters;
+using static WebApi.Filters.ExceptionHandleActionFilters;
 using static Utilities.Monitor.HealthCheckHelper;
 using Repository.Interfaces;
 using FluentValidation.AspNetCore;
-using JobScheduling.Middleware;
+using WebApi.Middleware;
 using Hangfire;
 using Hangfire.SqlServer;
 using Utilities.Utilities;
-using Services.Job.Interfaces;
 using Services.Job;
-using JobScheduling.Job;
+using WebApi.Job;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -41,7 +40,7 @@ try
     var key = builder.Configuration["EncryptionSettings:AESKey"] ?? "";
     var iv = builder.Configuration["EncryptionSettings:AESIV"] ?? "";
 
-    Serilog.Log.Information("Starting web host");
+    Log.Information("Starting web host");
 
     #region Serilog
     //  Read Serilog config from appsettings.json (https://blog.miniasp.com/post/2021/11/29/How-to-use-Serilog-with-NET-6)
@@ -337,7 +336,6 @@ try
     });
     #endregion
 
-
     app.UseCors(AllowMyFrontEnd);
 
     app.UseHttpsRedirection();
@@ -386,7 +384,6 @@ try
     // HealthChecks UI 網址
     app.MapHealthChecksUI(options => options.UIPath = "/hc-ui");
     #endregion   
-
 
     app.Run();
 

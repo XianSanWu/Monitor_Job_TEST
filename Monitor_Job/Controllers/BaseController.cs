@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Responses;
 using Models.Enums;
 
-namespace JobScheduling.Controllers
+namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

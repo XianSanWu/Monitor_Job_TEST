@@ -1,0 +1,73 @@
+﻿using System.ComponentModel;
+
+namespace Hangfire_Models.Enums
+{
+    /// <summary>
+    /// 0-59分鐘
+    /// </summary>
+    public enum MinuteEnum
+    {
+        [Description("None")] None = 555,
+        [Description("00分")] M00 = 0,
+        [Description("01分")] M01 = 1,
+        [Description("02分")] M02 = 2,
+        [Description("03分")] M03 = 3,
+        [Description("04分")] M04 = 4,
+        [Description("05分")] M05 = 5,
+        [Description("06分")] M06 = 6,
+        [Description("07分")] M07 = 7,
+        [Description("08分")] M08 = 8,
+        [Description("09分")] M09 = 9,
+        [Description("10分")] M10 = 10,
+        [Description("11分")] M11 = 11,
+        [Description("12分")] M12 = 12,
+        [Description("13分")] M13 = 13,
+        [Description("14分")] M14 = 14,
+        [Description("15分")] M15 = 15,
+        [Description("16分")] M16 = 16,
+        [Description("17分")] M17 = 17,
+        [Description("18分")] M18 = 18,
+        [Description("19分")] M19 = 19,
+        [Description("20分")] M20 = 20,
+        [Description("21分")] M21 = 21,
+        [Description("22分")] M22 = 22,
+        [Description("23分")] M23 = 23,
+        [Description("24分")] M24 = 24,
+        [Description("25分")] M25 = 25,
+        [Description("26分")] M26 = 26,
+        [Description("27分")] M27 = 27,
+        [Description("28分")] M28 = 28,
+        [Description("29分")] M29 = 29,
+        [Description("30分")] M30 = 30,
+        [Description("31分")] M31 = 31,
+        [Description("32分")] M32 = 32,
+        [Description("33分")] M33 = 33,
+        [Description("34分")] M34 = 34,
+        [Description("35分")] M35 = 35,
+        [Description("36分")] M36 = 36,
+        [Description("37分")] M37 = 37,
+        [Description("38分")] M38 = 38,
+        [Description("39分")] M39 = 39,
+        [Description("40分")] M40 = 40,
+        [Description("41分")] M41 = 41,
+        [Description("42分")] M42 = 42,
+        [Description("43分")] M43 = 43,
+        [Description("44分")] M44 = 44,
+        [Description("45分")] M45 = 45,
+        [Description("46分")] M46 = 46,
+        [Description("47分")] M47 = 47,
+        [Description("48分")] M48 = 48,
+        [Description("49分")] M49 = 49,
+        [Description("50分")] M50 = 50,
+        [Description("51分")] M51 = 51,
+        [Description("52分")] M52 = 52,
+        [Description("53分")] M53 = 53,
+        [Description("54分")] M54 = 54,
+        [Description("55分")] M55 = 55,
+        [Description("56分")] M56 = 56,
+        [Description("57分")] M57 = 57,
+        [Description("58分")] M58 = 58,
+        [Description("59分")] M59 = 59
+    }
+
+}

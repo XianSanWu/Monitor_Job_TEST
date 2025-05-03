@@ -10,7 +10,7 @@ namespace Models.Dto.Responses
         {
             #region Properties
             /// <summary>  查詢結果[清單] </summary>
-            public List<WorkflowStepsSearchResponse>? SearchItem { get; set; }
+            public List<WorkflowStepsSearchResponse> SearchItem { get; set; } = [];
             #endregion
 
             /// <summary> 查詢結果[欄位] </summary>

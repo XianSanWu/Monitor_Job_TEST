@@ -1,5 +1,4 @@
-﻿
-using Models.Enums;
+﻿using Models.Enums;
 
 namespace Models.Dto.Common
 {

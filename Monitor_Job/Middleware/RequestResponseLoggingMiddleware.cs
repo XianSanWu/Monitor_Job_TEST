@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace JobScheduling.Middleware
+namespace WebApi.Middleware
 {
     public class RequestResponseLoggingMiddleware(RequestDelegate next, ILogger<RequestResponseLoggingMiddleware> logger)
     {

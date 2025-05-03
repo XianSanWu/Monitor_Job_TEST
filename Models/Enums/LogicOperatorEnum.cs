@@ -1,5 +1,4 @@
-﻿
-namespace Models.Enums
+﻿namespace Models.Enums
 {
     /// <summary>
     /// DB 邏輯語法

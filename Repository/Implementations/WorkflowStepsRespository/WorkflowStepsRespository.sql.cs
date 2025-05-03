@@ -199,7 +199,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
                         var columnName = prop.Key;
                         var (type, value) = prop.Value;
 
-                        if (value is not FieldWithMetadataModel<object> meta || // 確保 meta 是正確的型別
+                        if (value is not FieldWithMetadataModel meta || // 確保 meta 是正確的型別
                             string.IsNullOrWhiteSpace(meta.MathSymbol?.ToString()) ||
                             meta.Value == null ||
                             string.IsNullOrWhiteSpace(meta.Value?.ToString()))

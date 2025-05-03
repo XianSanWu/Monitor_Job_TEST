@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Enums;
 using Models.Dto.Responses;
 
-namespace JobScheduling.Filters
+namespace WebApi.Filters
 {
     public class ExceptionHandleActionFilters
     {

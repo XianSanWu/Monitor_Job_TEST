@@ -1,7 +1,7 @@
 ﻿using Models.Entities;
 using static Models.Dto.Responses.WorkflowStepsResponse.WorkflowStepsSearchListResponse;
 
-namespace JobScheduling.Profile
+namespace WebApi.Profile
 {
     public class MapperProfile : AutoMapper.Profile
     {

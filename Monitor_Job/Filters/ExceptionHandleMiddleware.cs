@@ -1,4 +1,4 @@
-﻿namespace JobScheduling.Filters
+﻿namespace WebApi.Filters
 {
     public class ExceptionHandleMiddleware(RequestDelegate next)
     {

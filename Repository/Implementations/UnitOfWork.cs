@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Models.Enums;
 using Repository.Interfaces;
 using System.Data.Common;
 using Utilities.Utilities;
+using Models.Enums;
 
 namespace Repository.Implementations
 {

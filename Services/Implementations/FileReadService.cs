@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.Dto.Responses;
 using Services.Interfaces;
@@ -39,7 +38,7 @@ public class FileService(
         CancellationToken cancellationToken
         )
     {
-        var logSource = $"【{jobGuid}】" + jobGuid + LogHelper.Build<FileService>();
+        var logSource = $"【{jobGuid}】" + LogHelper.Build<FileService>();
 
         _logger.LogInformation($"{logSource} 程式執行開始");
         try
