@@ -104,7 +104,16 @@ namespace WebApi.Controllers
                 }
                 #endregion
 
+                #region 合併已存在 + 解析後的檔名，做為更新目標
+                var mergedUploadFileNames = queryWfsList?.SearchItem
+                    .Select(x => x.UploadFileName)
+                    .Concat(parsedLogs.CompletedJobs)
+                    .Distinct()
+                    .ToList();
+                #endregion
+
                 #region Step 5: 更新流程步驟狀態為 Mail_Hunter
+
                 var fieldReq = new WorkflowStepsUpdateFieldRequest
                 {
                     ProgressStatus = ProgressStatusTypeEnum.Mail_Hunter.ToString()
@@ -122,7 +131,7 @@ namespace WebApi.Controllers
                         UploadFileName = new FieldWithMetadataModel
                         {
                             MathSymbol = MathSymbolEnum.In,
-                            Value = queryWfsList?.SearchItem
+                            Value = mergedUploadFileNames
                         }
                     }
                 };
