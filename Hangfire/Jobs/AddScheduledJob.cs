@@ -38,7 +38,7 @@ namespace Hangfire.Jobs
             MinuteEnum minute
         )
         {
-            var jobKey = $"job:{jobName}";
+            var jobKey = $"{jobName}";//_{selectMethod}
 
             var selectMethod = scheduleType switch
             {
@@ -84,14 +84,14 @@ namespace Hangfire.Jobs
                 _ => throw new ArgumentException("週期設定錯誤：請確認週期設定是否正確")
             };
 
-
+            // 在定期工作中設定
             RecurringJob.AddOrUpdate<JobExecutor>(
                 recurringJobId: jobKey,
                 methodCall: executor => executor.Execute(jobExecutionContext),
                 cronExpression: cron,
                 options: new RecurringJobOptions
                 {
-                    TimeZone = TimeZoneInfo.Local
+                    TimeZone = TimeZoneInfo.Local,
                 }
             );
         }
