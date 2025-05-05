@@ -138,7 +138,7 @@ try
     builder.Services.AddDistributedMemoryCache();  // or another session provider
     builder.Services.AddSession(options =>
     {
-        options.IdleTimeout = TimeSpan.FromMinutes(1);  // Set session timeout
+        options.IdleTimeout = TimeSpan.FromMinutes(10);  // Set session timeout
         options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
     });
