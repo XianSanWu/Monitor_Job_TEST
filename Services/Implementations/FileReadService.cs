@@ -148,12 +148,12 @@ public class FileService(
         catch (OperationCanceledException ocex)
         {
             _logger.LogError($"{logSource} 被取消，訊息：{ocex.Message}");
-            return false;
+            throw new Exception($"{logSource} 被取消，OCEX：{ocex}，訊息：{ocex.Message}");
         }
         catch (Exception ex)
         {
             _logger.LogError($"{logSource} 發生錯誤：{ex.Message}");
-            return false;
+            throw new Exception($"{logSource} 被取消，EX：{ex}，訊息：{ex.Message}");
         }
         finally
         {

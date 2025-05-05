@@ -15,11 +15,7 @@ using static Utilities.Monitor.HealthCheckHelper;
 using Repository.Interfaces;
 using FluentValidation.AspNetCore;
 using WebApi.Middleware;
-using Hangfire;
-using Hangfire.SqlServer;
 using Utilities.Utilities;
-using Services.Job;
-using WebApi.Job;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -53,35 +49,6 @@ try
         .CreateLogger();
 
     builder.Host.UseSerilog();
-    #endregion
-
-    #region Hangfire (背景任務排程)
-    #region DB 設定
-    var hangfire_conn = builder.Configuration.GetConnectionString("Cdp");
-#if DEBUG
-    hangfire_conn = builder.Configuration.GetConnectionString("DefaultConnection");
-#endif
-    hangfire_conn = CryptoUtil.Decrypt(Base64Util.Decode(hangfire_conn ?? ""), key, iv);
-    builder.Services.AddTransient<UpdateWorkflowStatusJob>();
-
-    builder.Services.AddHangfire(config =>
-    {
-        config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-              .UseSimpleAssemblyNameTypeSerializer()
-              .UseRecommendedSerializerSettings()
-              .UseSqlServerStorage(hangfire_conn, new SqlServerStorageOptions
-              {
-                  CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                  SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                  QueuePollInterval = TimeSpan.FromSeconds(15),
-                  UseRecommendedIsolationLevel = true,
-                  DisableGlobalLocks = true
-              });
-    });
-    builder.Services.AddHangfireServer();
-    #endregion
-
-
     #endregion
 
     #region 服務註冊方法 Scrutor實現自動註冊(Service + Repository Layer)
@@ -219,10 +186,6 @@ try
             tags: ["api-sample"],
             args: [1, "arg1"]);
     #endregion
-    #region Hangfire分類
-    builder.Services.AddHealthChecks()
-    .AddCheck<SampleHangfireHealthCheck>("hangfire-sample", failureStatus: HealthStatus.Unhealthy, tags: ["hangfire-sample"]);
-    #endregion
     #endregion
 
     #region Healthcheck UI參數設定
@@ -231,7 +194,6 @@ try
         #region UI端點分類(可由此處或appsettings.json 中 HealthChecks 設定，擇一即可，避免資料重複顯示)
         //options.AddHealthCheckEndpoint("DB", "/_db");
         //options.AddHealthCheckEndpoint("API", "/_api");    
-        //options.AddHealthCheckEndpoint("Hangfire", "/_hangfire");
         #endregion
         #region UI相關設定
         //options.SetEvaluationTimeInSeconds(10);                     //time in seconds between check
@@ -255,22 +217,6 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
-    //使用Hangfire
-    app.UseHangfireDashboard("/hangfire", new DashboardOptions
-    {
-        Authorization = [new Hangfire.Dashboard.LocalRequestsOnlyAuthorizationFilter()] // 或自訂權限
-    });
-
-    // 註冊所有定時任務
-    HangfireJobRegistrar.RegisterAllRecurringJobs(app.Services);
-    app.Lifetime.ApplicationStarted.Register(() =>
-    {
-        using var scope = app.Services.CreateScope();
-        var job = scope.ServiceProvider.GetRequiredService<UpdateWorkflowStatusJob>();
-
-        BackgroundJob.Enqueue(() => job.ExecuteAsync(default));
-    });
 
     // 註冊 RequestResponseLoggingMiddleware 來記錄請求/回傳
     app.UseMiddleware<RequestResponseLoggingMiddleware>();
@@ -372,12 +318,6 @@ try
     {
         //限定  tags: new[] { "api-sample" }, 才出現
         Predicate = healthCheck => healthCheck.Tags.Contains("api-sample"),
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
-
-    app.MapHealthChecks("/_hangfire", new HealthCheckOptions
-    {
-        Predicate = healthCheck => healthCheck.Tags.Contains("hangfire-sample"),
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
 

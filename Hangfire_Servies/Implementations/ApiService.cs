@@ -44,13 +44,13 @@ namespace Hangfire_Servies.Implementations
                 else
                 {
                     _logger.LogError("API 呼叫失敗，狀態碼：{StatusCode}", response.StatusCode);
-                    return null;
+                    throw new Exception($"API 呼叫失敗，API_URL：{apiUrl}，狀態碼：{response.StatusCode}");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "呼叫 API 發生錯誤。");
-                return null;
+                throw new Exception($"API 呼叫失敗，API_URL：{apiUrl}，EX：{ex}，EX_MSG：{ex?.Message}");
             }
         }
     }

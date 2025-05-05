@@ -7,15 +7,9 @@ namespace Hangfire.Filters
 {
     public class DashboardBasicAuthorizationFilter : IDashboardAuthorizationFilter
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string account = "admin_it";
         private readonly string password = "admin_it";
         private readonly int sessionTimeoutMinutes = 10;
-
-        public DashboardBasicAuthorizationFilter(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
 
         public bool Authorize(DashboardContext context)
         {

@@ -183,7 +183,6 @@ namespace Repository.Implementations.WorkflowStepsRespository
             #endregion
 
             #region 處理欄位條件（多組 OR 群組，每組內 AND 條件）
-
             if (conditionReq != null && conditionReq.Any())
             {
                 var whereGroups = new List<string>();

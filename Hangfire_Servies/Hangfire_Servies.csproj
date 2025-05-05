@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hangfire_Models\Hangfire_Models.csproj" />
     <ProjectReference Include="..\Hangfire_Repository\Hangfire_Repository.csproj" />
+    <ProjectReference Include="..\Hangfire_Utilities\Hangfire_Utilities.csproj" />
   </ItemGroup>
 
 </Project>

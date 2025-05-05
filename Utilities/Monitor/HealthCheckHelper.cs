@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Data.Common;
 
@@ -115,30 +114,30 @@ namespace Utilities.Monitor
             }
         }
 
-        public class SampleHangfireHealthCheck : IHealthCheck
-        {
-            private readonly IBackgroundJobClient _backgroundJobClient;
+        //public class SampleHangfireHealthCheck : IHealthCheck
+        //{
+        //    private readonly IBackgroundJobClient _backgroundJobClient;
 
-            public SampleHangfireHealthCheck(IBackgroundJobClient backgroundJobClient)
-            {
-                _backgroundJobClient = backgroundJobClient;
-            }
+        //    public SampleHangfireHealthCheck(IBackgroundJobClient backgroundJobClient)
+        //    {
+        //        _backgroundJobClient = backgroundJobClient;
+        //    }
 
-            public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
-            {
-                try
-                {
-                    // 嘗試將一個背景工作排進 Hangfire
-                    _backgroundJobClient.Enqueue(() => Console.WriteLine("Hangfire HealthCheck"));
+        //    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+        //    {
+        //        try
+        //        {
+        //            // 嘗試將一個背景工作排進 Hangfire
+        //            _backgroundJobClient.Enqueue(() => Console.WriteLine("Hangfire HealthCheck"));
 
-                    return Task.FromResult(HealthCheckResult.Healthy("Hangfire is working properly."));
-                }
-                catch (Exception ex)
-                {
-                    return Task.FromResult(HealthCheckResult.Unhealthy("Hangfire is not responding.", ex));
-                }
-            }
-        }
+        //            return Task.FromResult(HealthCheckResult.Healthy("Hangfire is working properly."));
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Task.FromResult(HealthCheckResult.Unhealthy("Hangfire is not responding.", ex));
+        //        }
+        //    }
+        //}
 
     }
 }

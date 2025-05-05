@@ -113,7 +113,6 @@ namespace WebApi.Controllers
                 #endregion
 
                 #region Step 5: 更新流程步驟狀態為 Mail_Hunter
-
                 var fieldReq = new WorkflowStepsUpdateFieldRequest
                 {
                     ProgressStatus = ProgressStatusTypeEnum.Mail_Hunter.ToString()
@@ -153,8 +152,9 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusJob 執行失敗");
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
-                return SuccessResult(result);
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                throw new Exception($"【UpdateWorkflowStatusJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
+                //return SuccessResult(result);
             }
             finally
             {
