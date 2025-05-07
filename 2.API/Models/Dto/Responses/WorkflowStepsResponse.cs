@@ -82,6 +82,8 @@ namespace Models.Dto.Responses
                 /// <summary>群發更新時間</summary>
                 public DateTime GroupSendUpdateAt { get; set; }
 
+                /// <summary>訊息</summary>
+                public string? Message { get; set; }
             }
 
         }

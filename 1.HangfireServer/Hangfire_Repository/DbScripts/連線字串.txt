@@ -1,1 +1,0 @@
-Server=(localdb)\\MSSQLLocalDB;Database=CDP;Trusted_Connection=True;
