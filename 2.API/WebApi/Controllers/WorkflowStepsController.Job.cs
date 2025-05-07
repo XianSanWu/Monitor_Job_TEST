@@ -17,16 +17,16 @@ namespace WebApi.Controllers
         #endregion
 
         [Tags("WorkflowSteps.Job")]
-        [HttpPost("UpdateWorkflowStatusJob")]
-        public async Task<ResultResponse<bool>> UpdateWorkflowStatusJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
+        [HttpPost("UpdateWorkflowStatusMailhunterJob")]
+        public async Task<ResultResponse<bool>> UpdateWorkflowStatusMailhunterJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
         {
             var jobGuid = $"JobExecutionContext：{JsonSerializer.Serialize(jobExecutionContext)}，JobGuid：{Guid.NewGuid()}";
             var result = false;
 
             try
             {
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
-                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusJob Job 開始執行");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusMailhunterJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusMailhunterJob Job 開始執行");
 
                 #region Step 1: 複製當日檔案
                 var copySuccess = await _fileService.CopyTodayFilesAsync(jobGuid, CopySourcePath, CopyTargetPath, SendBatchFileName, cancellationToken).ConfigureAwait(false);
@@ -146,7 +146,7 @@ namespace WebApi.Controllers
                 if (!updateWfsList)
                 {
                     _logger.LogWarning($"【{jobGuid}】UpdateWorkflowList 更新失敗");
-                    await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                    await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusMailhunterJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
                     return SuccessResult(result);
                 }
 
@@ -155,18 +155,34 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusJob 執行失敗");
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
-                throw new Exception($"【UpdateWorkflowStatusJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
+                _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusMailhunterJob 執行失敗");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusMailhunterJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                throw new Exception($"【UpdateWorkflowStatusMailhunterJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
                 //return SuccessResult(result);
             }
             finally
             {
-                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusJob Job 執行結束");
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusJob 執行結束【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusMailhunterJob Job 執行結束");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusMailhunterJob 執行結束【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
             }
 
             return SuccessResult(result);
+        }
+
+
+        [Tags("WorkflowSteps.Job")]
+        [HttpPost("UpdateWorkflowStatusFinishJob")]
+        public async Task<ResultResponse<bool>> UpdateWorkflowStatusFinishJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
+        {
+            var jobGuid = $"JobExecutionContext：{JsonSerializer.Serialize(jobExecutionContext)}，JobGuid：{Guid.NewGuid()}";
+            var result = false;
+
+            // TO DO
+
+
+
+            return SuccessResult(result);
+
         }
     }
 }

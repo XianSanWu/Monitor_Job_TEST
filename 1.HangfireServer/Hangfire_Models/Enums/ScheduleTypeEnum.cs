@@ -9,8 +9,10 @@ namespace Hangfire_Models.Enums
     /// </summary>
     public enum ScheduleTypeEnum
     {
-        [Description("更新流程狀態任務")]
-        UpdateWorkflowStatusJob
+        [Description("更新流程狀態任務>>Mailhunter")]
+        UpdateWorkflowStatusMailhunterJob,
+        [Description("更新流程狀態任務>>Finish")]
+        UpdateWorkflowStatusFinishJob,
     }
 
 }

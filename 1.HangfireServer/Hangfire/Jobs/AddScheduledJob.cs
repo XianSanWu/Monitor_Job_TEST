@@ -17,7 +17,7 @@ namespace Hangfire.Jobs
             [DisplayData(Label = "任務名稱", Placeholder = "請輸入任務名稱", Description = "此名稱將用於識別該排程任務。", IsRequired = true)]
             string jobName,
 
-            [DisplayData(Label = "任務類型", Description = "請選擇此排程任務要執行的作業", DefaultValue = ScheduleTypeEnum.UpdateWorkflowStatusJob, IsRequired = true)]
+            [DisplayData(Label = "任務類型", Description = "請選擇此排程任務要執行的作業", DefaultValue = ScheduleTypeEnum.UpdateWorkflowStatusMailhunterJob, IsRequired = true)]
             ScheduleTypeEnum scheduleType,
 
             //[DisplayData(Label = "CRON 表達式", Placeholder = "例如 */5 * * * *", Description = "請輸入 CRON 格式的排程時間。")]
@@ -42,7 +42,8 @@ namespace Hangfire.Jobs
 
             var selectMethod = scheduleType switch
             {
-                ScheduleTypeEnum.UpdateWorkflowStatusJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusJob),
+                ScheduleTypeEnum.UpdateWorkflowStatusMailhunterJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusMailhunterJob),
+                ScheduleTypeEnum.UpdateWorkflowStatusFinishJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusFinishJob),
                 _ => ""
             };
 
