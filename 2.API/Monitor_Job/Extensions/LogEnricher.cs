@@ -24,7 +24,7 @@ namespace WebApi.Extensions
             if (logEvent.Properties.ContainsKey(Constants.SourceContextPropertyName))
             {
                 //增加 ClassName
-                var sourceContext = ((ScalarValue)logEvent.Properties[Constants.SourceContextPropertyName]).Value?.ToString() ?? "";
+                var sourceContext = ((ScalarValue)logEvent.Properties[Constants.SourceContextPropertyName]).Value?.ToString() ?? string.Empty;
                 logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClassName", sourceContext));
 
                 var methodName = "";

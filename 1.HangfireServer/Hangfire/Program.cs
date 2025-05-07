@@ -26,8 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 try
 {
-    var key = builder.Configuration["EncryptionSettings:AESKey"] ?? "";
-    var iv = builder.Configuration["EncryptionSettings:AESIV"] ?? "";
+    var key = builder.Configuration["EncryptionSettings:AESKey"] ?? string.Empty;
+    var iv = builder.Configuration["EncryptionSettings:AESIV"] ?? string.Empty;
 
     Log.Information("Starting Hangfire-Server host");
 
@@ -49,7 +49,7 @@ try
 #if DEBUG
     hangfire_conn = builder.Configuration.GetConnectionString("DefaultConnection");
 #endif
-    hangfire_conn = CryptoUtil.Decrypt(Base64Util.Decode(hangfire_conn ?? ""), key, iv);
+    hangfire_conn = CryptoUtil.Decrypt(Base64Util.Decode(hangfire_conn ?? string.Empty), key, iv);
 
     builder.Services.AddHangfire(config =>
     {
@@ -157,7 +157,7 @@ try
             {
                 // policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader(); 
 
-                var allowCors = (builder.Configuration["AppConfig:Cors"] ?? "").Split(",");
+                var allowCors = (builder.Configuration["AppConfig:Cors"] ?? string.Empty).Split(",");
                 policy.WithOrigins(allowCors).AllowAnyMethod().AllowAnyHeader();
             });
     });

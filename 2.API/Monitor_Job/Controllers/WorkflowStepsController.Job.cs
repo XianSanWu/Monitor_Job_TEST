@@ -65,19 +65,21 @@ namespace WebApi.Controllers
                 #endregion
 
                 #region Step 4: 查詢對應的流程步驟
-                var filterUploadFileNameList = new List<Option>
+                var filterUploadFileNameList = new List<FieldWithMetadataModel>
                 {
-                    new Option
+                    new FieldWithMetadataModel
                     {
                         Key = "UploadFileName",
+                        MathSymbol = MathSymbolEnum.In.ToString(),
                         Value = parsedLogs.CompletedJobs.ToArray()
                     }
                 };
 
 
-                filterUploadFileNameList.Add(new Option
+                filterUploadFileNameList.Add(new FieldWithMetadataModel
                 {
                     Key = "ProgressStatus",
+                    MathSymbol = MathSymbolEnum.Equal.ToString(),
                     Value = ProgressStatusTypeEnum.FTP.ToString()
                 });
 
@@ -107,9 +109,11 @@ namespace WebApi.Controllers
                 #endregion
 
                 #region 合併已存在 + 解析後的檔名，做為更新目標
+                var completedJobsSet = new HashSet<string>(parsedLogs.CompletedJobs);
+
                 var mergedUploadFileNames = queryWfsList?.SearchItem
                     .Select(x => x.UploadFileName)
-                    .Concat(parsedLogs.CompletedJobs)
+                    .Where(name => completedJobsSet.Contains(name ?? string.Empty))
                     .Distinct()
                     .ToList();
                 #endregion
@@ -126,12 +130,12 @@ namespace WebApi.Controllers
                     {
                         Channel = new FieldWithMetadataModel
                         {
-                            MathSymbol = MathSymbolEnum.Equal,
+                            MathSymbol = MathSymbolEnum.Equal.ToString(),
                             Value = ChannelTypeEnum.EDM.ToString()
                         },
                         UploadFileName = new FieldWithMetadataModel
                         {
-                            MathSymbol = MathSymbolEnum.In,
+                            MathSymbol = MathSymbolEnum.In.ToString(),
                             Value = mergedUploadFileNames
                         }
                     }

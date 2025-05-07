@@ -2,6 +2,7 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Models.Dto.Common;
+using Models.Enums;
 using Repository.Interfaces;
 using System.Text;
 
@@ -183,27 +184,64 @@ namespace Repository.Implementations
         /// <summary>
         /// 動態添加欄位條件篩選
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="validColumns"></param>
-        protected void AppendFilterCondition(string? key, object? value, HashSet<string>? validColumns)
+        /// <param name="key">欄位名稱</param>
+        /// <param name="strMathSymbol">數學符號英文名稱（如 Equal, In, GreaterThan）</param>
+        /// <param name="value">查詢值</param>
+        /// <param name="validColumns">允許查詢的欄位清單</param>
+        protected void AppendFilterCondition(string? key, string strMathSymbol, object? value, HashSet<string>? validColumns)
         {
-            if (string.IsNullOrWhiteSpace(key) || value == null || string.IsNullOrWhiteSpace(value?.ToString()))
+            if (string.IsNullOrWhiteSpace(key) || value == null || string.IsNullOrWhiteSpace(value.ToString()))
                 return;
 
             if (validColumns != null && !validColumns.Contains(key, StringComparer.OrdinalIgnoreCase))
                 return;
 
-            if (key.EndsWith("At", StringComparison.OrdinalIgnoreCase))
+            switch (strMathSymbol.ToUpper())
             {
-                _sqlStr?.Append($" AND CONVERT(VARCHAR, {key}, 121) LIKE @{key} ");
+                case "IN":
+                    // 特別排除 string 因為 string 也是 IEnumerable
+                    if (value is IEnumerable<object> list && value is not string)
+                    {
+                        var placeholders = new List<string>();
+                        int index = 0;
+
+                        foreach (var item in list)
+                        {
+                            var paramName = $"@{key}_{index++}";
+                            placeholders.Add(paramName);
+                            _sqlParams?.Add(paramName, item);
+                        }
+
+                        if (placeholders.Count > 0)
+                        {
+                            _sqlStr?.Append($" AND {key} IN ({string.Join(", ", placeholders)}) ");
+                        }
+                    }
+                    break;
+
+                case "LIKE":
+                    var likeParamName = $"@{key}";
+                    if (key.EndsWith("At", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _sqlStr?.Append($" AND CONVERT(VARCHAR, {key}, 121) LIKE {likeParamName} ");
+                    }
+                    else
+                    {
+                        _sqlStr?.Append($" AND {key} LIKE {likeParamName} ");
+                    }
+
+                    _sqlParams?.Add(likeParamName, $"%{value}%");
+                    break;
+
+                default:
+                    var mathSymbol = MathSymbolEnum.FromName(strMathSymbol)?.Symbol ?? MathSymbolEnum.Equal.Symbol;
+                    var defaultParamName = $"@{key}";
+                    _sqlStr?.Append($" AND {key} {mathSymbol} {defaultParamName} ");
+                    _sqlParams?.Add(defaultParamName, value); // 不加 %%，只對 LIKE 加
+                    break;
             }
-            else
-            {
-                _sqlStr?.Append($" AND {key} LIKE @{key} ");
-            }
-            _sqlParams?.Add($"@{key}", $"%{value}%");
         }
+
 
     }
 }

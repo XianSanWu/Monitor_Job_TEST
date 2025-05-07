@@ -70,7 +70,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
             UpdateWorkflowSql(fieldReq, conditionReq);
 
             // 使用 ExecuteAsync 來執行 SQL 更新，並傳入 cancellationToken
-            var affectedRows = await _unitOfWork.Connection.ExecuteAsync(_sqlStr?.ToString() ?? "", _sqlParams).ConfigureAwait(false);
+            var affectedRows = await _unitOfWork.Connection.ExecuteAsync(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false);
 
             // 判斷是否有資料被更新
             result = affectedRows > 0;

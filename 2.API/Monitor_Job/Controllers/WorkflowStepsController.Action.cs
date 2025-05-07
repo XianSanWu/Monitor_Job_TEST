@@ -26,13 +26,13 @@ namespace WebApi.Controllers
             var jobGuid = Guid.NewGuid().ToString();
 
             if (string.IsNullOrWhiteSpace(sourcePath))
-                sourcePath = _config["FileCopySettings:MailhunterLogSourceDirectory"] ?? "";
+                sourcePath = _config["FileCopySettings:MailhunterLogSourceDirectory"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(targetPath))
-                targetPath = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? "";
+                targetPath = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(startsWithFileName))
-                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
+                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
 
             var result = await _fileService.CopyTodayFilesAsync(jobGuid, sourcePath, targetPath, startsWithFileName, cancellationToken).ConfigureAwait(false);
             return SuccessResult(result);
@@ -57,12 +57,12 @@ namespace WebApi.Controllers
             var jobGuid = Guid.NewGuid().ToString();
 
             if (string.IsNullOrWhiteSpace(directory))
-                directory = _config["FileReadSettings:MailhunterLogDirectory"] ?? "";
+                directory = _config["FileReadSettings:MailhunterLogDirectory"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(startsWithFileName))
-                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
+                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
 
-            var result = await _fileService.GetTodayFileContentAsync(jobGuid, directory, startsWithFileName, cancellationToken).ConfigureAwait(false) ?? "";
+            var result = await _fileService.GetTodayFileContentAsync(jobGuid, directory, startsWithFileName, cancellationToken).ConfigureAwait(false) ?? string.Empty;
             return SuccessResult(result);
         }
 
@@ -84,12 +84,12 @@ namespace WebApi.Controllers
             var jobGuid = Guid.NewGuid().ToString();
 
             if (string.IsNullOrWhiteSpace(directory))
-                directory = _config["FileReadSettings:MailhunterLogDirectory"] ?? "";
+                directory = _config["FileReadSettings:MailhunterLogDirectory"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(startsWithFileName))
-                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
+                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
 
-            string result = await _fileService.GetFileContentChunkAsync(jobGuid, directory, startsWithFileName, cancellationToken) ?? "";
+            string result = await _fileService.GetFileContentChunkAsync(jobGuid, directory, startsWithFileName, cancellationToken) ?? string.Empty;
 
             return SuccessResult(result);
         }
@@ -114,10 +114,10 @@ namespace WebApi.Controllers
             var jobGuid = Guid.NewGuid().ToString();
 
             if (string.IsNullOrWhiteSpace(directory))
-                directory = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? "";
+                directory = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(startsWithFileName))
-                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
+                startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
 
             var result = await _fileService.GetFileContentChunkListAsync(jobGuid, directory, startsWithFileName, cancellationToken).ConfigureAwait(false) ?? new List<string>();
 
@@ -138,7 +138,7 @@ namespace WebApi.Controllers
 
             var result = new MailhunterLogParseResponse();
 
-            result = await _fileService.MailhunterLogParseLogAsync(jobGuid, request.LogContent ?? "", cancellationToken).ConfigureAwait(false);
+            result = await _fileService.MailhunterLogParseLogAsync(jobGuid, request.LogContent ?? string.Empty, cancellationToken).ConfigureAwait(false);
 
             return SuccessResult(result);
         }
@@ -157,8 +157,8 @@ namespace WebApi.Controllers
 
             var result = new MailhunterLogParseResponse();
 
-            //var directory = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? "";
-            //var startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? "";
+            //var directory = _config["FileCopySettings:MailhunterLogTargetDirectory"] ?? string.Empty;
+            //var startsWithFileName = _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
 
             //request.LogContentList = await _fileService.GetFileContentChunkListAsync(directory, startsWithFileName, _config, cancellationToken).ConfigureAwait(false) ?? new List<string>();
 

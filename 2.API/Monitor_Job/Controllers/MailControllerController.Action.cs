@@ -27,7 +27,7 @@ namespace WebApi.Controllers
             if (string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(to))
                 return SuccessResult(result);
 
-            result = await _mailService.SendMailAndColineAsync(subject, body, to, cc ?? "", sendToAdmin);
+            result = await _mailService.SendMailAndColineAsync(subject, body, to, cc ?? string.Empty, sendToAdmin);
             return SuccessResult(result);
         }
     }

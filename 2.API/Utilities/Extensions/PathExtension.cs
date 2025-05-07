@@ -54,7 +54,7 @@ namespace Utilities.Extensions
             /// <returns></returns>
             public static string GetDirectoryPath(string filePath)
             {
-                return Path.GetDirectoryName(filePath) ?? "";
+                return Path.GetDirectoryName(filePath) ?? string.Empty;
             }
 
             #endregion

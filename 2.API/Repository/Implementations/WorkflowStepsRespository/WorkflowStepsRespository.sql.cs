@@ -27,7 +27,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
 
             foreach (var column in columnsWithValues)
             {
-                AppendFilterCondition(column.Key, column.Value, null); // 不需要驗證欄位是否有效，因為已從 model 取得
+                AppendFilterCondition(column.Key, string.Empty, column.Value, null); // 不需要驗證欄位是否有效，因為已從 model 取得
             }
             #endregion
 
@@ -38,7 +38,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
             {
                 foreach (var filter in searchReq.FilterModel)
                 {
-                    AppendFilterCondition(filter.Key, filter.Value, validColumns);
+                    AppendFilterCondition(filter.Key, filter.MathSymbol?.ToString() ?? string.Empty, filter.Value, validColumns);
                 }
             }
             #endregion
@@ -205,7 +205,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
                             continue;
 
                         var paramKey = $" @cond_{groupIndex}_{columnName} ";
-                        groupConditions.Add($"{columnName} {meta.MathSymbol} {paramKey}");
+                        groupConditions.Add($"{columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} {paramKey}");
                         _sqlParams.Add(paramKey, meta.Value); // 使用 meta.Value
                     }
 

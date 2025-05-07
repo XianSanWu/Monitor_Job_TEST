@@ -43,6 +43,9 @@ namespace Models.Enums
         [Description("合集")]
         public static readonly MathSymbolEnum In = new("IN", "合集");
 
+        [Description("模糊查詢")]
+        public static readonly MathSymbolEnum Like = new("LIKE", "模糊查詢");
+
         public string Symbol { get; }
         public string Description { get; }
 
@@ -53,5 +56,12 @@ namespace Models.Enums
         }
 
         public override string ToString() => Symbol;
+
+        public static MathSymbolEnum? FromName(string name)
+        {
+            var field = typeof(MathSymbolEnum).GetField(name,
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            return field?.GetValue(null) as MathSymbolEnum;
+        }
     }
 }

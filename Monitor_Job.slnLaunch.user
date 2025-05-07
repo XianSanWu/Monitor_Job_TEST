@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "新增設定檔",
+    "Projects": [
+      {
+        "Path": "1.HangfireServer\\Hangfire\\Hangfire.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "2.API\\Monitor_Job\\WebApi.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

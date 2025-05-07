@@ -45,7 +45,7 @@ namespace Hangfire_Repository.Implementations
             #region 建立和管理 SqlConnection 類別使用之連接字串的內容      
             var key = _config["EncryptionSettings:AESKey"]!;
             var iv = _config["EncryptionSettings:AESIV"]!;
-            var dbConnString = CryptoUtil.Decrypt(Base64Util.Decode(_dbConnString ?? ""), key, iv);
+            var dbConnString = CryptoUtil.Decrypt(Base64Util.Decode(_dbConnString ?? string.Empty), key, iv);
             SqlConnectionStringBuilder SqlConnBuilder = new(dbConnString)
             {
                 Pooling = true,
