@@ -43,11 +43,12 @@ namespace Hangfire.Filters
             return false;
         }
 
-        private void RedirectToHttps(HttpContext httpContext)
+        private static void RedirectToHttps(HttpContext httpContext)
         {
             httpContext.Response.StatusCode = 301;
             httpContext.Response.Headers.Location = $"https://{httpContext.Request.Host}{httpContext.Request.Path}";
         }
+
         private bool IsSessionExpired(HttpContext httpContext)
         {
             var sessionTimestamp = httpContext.Session.GetString("SessionTimestamp");

@@ -101,7 +101,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
             #region  設定SQL排序
             if (searchReq.SortModel != null &&
                 !string.IsNullOrWhiteSpace(searchReq.SortModel.Key) &&
-                !string.IsNullOrWhiteSpace(searchReq.SortModel.Value) &&
+                searchReq.SortModel.Value != null &&
                 validColumns.Contains(searchReq.SortModel.Key, StringComparer.OrdinalIgnoreCase)
                 )
             {

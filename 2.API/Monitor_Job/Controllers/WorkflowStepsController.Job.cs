@@ -65,13 +65,15 @@ namespace WebApi.Controllers
                 #endregion
 
                 #region Step 4: 查詢對應的流程步驟
-                var filterUploadFileNameList = parsedLogs.CompletedJobs
-                    .Select(job => new Option
+                var filterUploadFileNameList = new List<Option>
+                {
+                    new Option
                     {
                         Key = "UploadFileName",
-                        Value = job
-                    })
-                    .ToList();
+                        Value = parsedLogs.CompletedJobs.ToArray()
+                    }
+                };
+
 
                 filterUploadFileNameList.Add(new Option
                 {
