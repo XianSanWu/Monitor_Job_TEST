@@ -135,7 +135,8 @@ namespace Repository.Implementations.WorkflowStepsRespository
             #region 排除不可被更新欄位（例如主鍵）
             var excludeFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "SN", "WorkflowUuid"
+                "SN","WorkflowUuid",
+                //"CreateAt","UpdateAt","JourneyCreateAt","JourneyUpdateAt","GroupSendCreateAt","GroupSendUpdateAt"
             };
             #endregion
 
@@ -145,7 +146,24 @@ namespace Repository.Implementations.WorkflowStepsRespository
                 var columnName = column.Key;
                 var (type, value) = column.Value;
 
-                if (excludeFields.Contains(columnName))
+
+                DateTime? date = null;
+                try
+                {
+                    if (DateTime.TryParse(value?.ToString(), out DateTime parsedDate))
+                    {
+                        date = parsedDate;
+                    }
+                }
+                catch (Exception)
+                {
+                    //不理會
+                }
+
+                if (excludeFields.Contains(columnName) ||
+                    value == null ||
+                    string.IsNullOrWhiteSpace(value?.ToString()) ||
+                    (date)?.ToString("yyyy/MM/dd") == DateTime.MinValue.ToString("yyyy/MM/dd"))
                     continue;
 
                 var paramName = $"@{columnName}";
@@ -204,9 +222,49 @@ namespace Repository.Implementations.WorkflowStepsRespository
                             string.IsNullOrWhiteSpace(meta.Value?.ToString()))
                             continue;
 
-                        var paramKey = $" @cond_{groupIndex}_{columnName} ";
-                        groupConditions.Add($"{columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} {paramKey}");
-                        _sqlParams.Add(paramKey, meta.Value); // 使用 meta.Value
+                        switch (meta.MathSymbol.ToUpper())
+                        {
+                            case "IN":
+                                // 特別排除 string 因為 string 也是 IEnumerable
+                                if (meta.Value is IEnumerable<object> list && meta.Value is not string)
+                                {
+                                    var placeholders = new List<string>();
+                                    int index = 0;
+
+                                    foreach (var item in list)
+                                    {
+                                        var paramName = $"@cond_{groupIndex}_{columnName}_{index++}";
+                                        placeholders.Add(paramName);
+                                        _sqlParams?.Add(paramName, item);
+                                    }
+
+                                    if (placeholders.Count > 0)
+                                    {
+                                        groupConditions.Add($" {columnName} IN ({string.Join(", ", placeholders)}) ");
+                                    }
+                                }
+                                break;
+
+                            case "LIKE":
+                                var likeParamName = $"@cond_{groupIndex}_{columnName} ";
+                                if (columnName.EndsWith("At", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    groupConditions.Add($" CONVERT(VARCHAR, {columnName}, 121) LIKE {likeParamName} ");
+                                }
+                                else
+                                {
+                                    groupConditions.Add($"{columnName} LIKE {likeParamName} ");
+                                }
+
+                                _sqlParams?.Add(likeParamName, $"%{value}%");
+                                break;
+
+                            default:
+                                var paramKey = $"@cond_{groupIndex}_{columnName} ";
+                                groupConditions.Add($" {columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} {paramKey} ");
+                                _sqlParams?.Add(paramKey, meta.Value); // 使用 meta.Value
+                                break;
+                        }
                     }
 
                     if (groupConditions.Count > 0)
@@ -226,9 +284,17 @@ namespace Repository.Implementations.WorkflowStepsRespository
 
                 if (whereGroups.Count > 0)
                 {
+                    // 移除最後一個如果是 "AND" 或 "OR"
+                    var last = whereGroups[^1].Trim().ToUpper();
+                    if (last == LogicOperatorEnum.AND.ToString() || last == LogicOperatorEnum.OR.ToString())
+                    {
+                        whereGroups.RemoveAt(whereGroups.Count - 1);
+                    }
+
                     _sqlStr?.Append(" WHERE 1=1 AND ");
                     _sqlStr?.Append(string.Join(string.Empty, whereGroups));
                 }
+
             }
 
             #endregion

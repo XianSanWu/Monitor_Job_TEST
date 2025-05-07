@@ -12,7 +12,8 @@ namespace Hangfire.Jobs
         private readonly ILogger<JobExecutor> _logger = logger;
 
         [DisableConcurrentExecution(timeoutInSeconds: 3600)]
-        [AutomaticRetry(Attempts = 0)]
+        //[AutomaticRetry(Attempts = 0)]
+        [AutomaticRetry(Attempts = 0, OnAttemptsExceeded = AttemptsExceededAction.Fail, LogEvents = true)]
         [JobDisplayName("{0}")]
         [JobTrackingFilter]
         public async Task Execute(JobExecutionContext jobExecutionContext)

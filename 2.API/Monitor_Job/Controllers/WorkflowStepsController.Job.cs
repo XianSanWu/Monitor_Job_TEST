@@ -1,13 +1,9 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Common;
 using Models.Dto.Requests;
 using Models.Dto.Responses;
 using Models.Enums;
-using System.Linq;
-using System.Runtime.Intrinsics.Arm;
 using System.Text.Json;
-using System.Threading.Channels;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 
 namespace WebApi.Controllers
@@ -128,6 +124,8 @@ namespace WebApi.Controllers
                 {
                     new()
                     {
+                        InsideLogicOperator = LogicOperatorEnum.AND,
+                        GroupLogicOperator = LogicOperatorEnum.AND,
                         Channel = new FieldWithMetadataModel
                         {
                             MathSymbol = MathSymbolEnum.Equal.ToString(),

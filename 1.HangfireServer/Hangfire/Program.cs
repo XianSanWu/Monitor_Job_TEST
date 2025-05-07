@@ -104,7 +104,7 @@ try
         options.Queues = queues.Distinct()?.ToArray();
     });
 
-    builder.Services.AddScoped<JobExecutor>();
+    //builder.Services.AddScoped<JobExecutor>();
 
     #endregion
 

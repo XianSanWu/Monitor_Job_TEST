@@ -190,7 +190,7 @@ namespace Repository.Implementations
         /// <param name="validColumns">允許查詢的欄位清單</param>
         protected void AppendFilterCondition(string? key, string strMathSymbol, object? value, HashSet<string>? validColumns)
         {
-            if (string.IsNullOrWhiteSpace(key) || value == null || string.IsNullOrWhiteSpace(value.ToString()))
+            if (string.IsNullOrWhiteSpace(key) || value == null || string.IsNullOrWhiteSpace(value?.ToString()))
                 return;
 
             if (validColumns != null && !validColumns.Contains(key, StringComparer.OrdinalIgnoreCase))
