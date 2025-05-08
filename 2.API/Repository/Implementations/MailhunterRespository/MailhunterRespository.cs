@@ -3,8 +3,6 @@ using Dapper;
 using Models.Dto.Responses;
 using Models.Entities;
 using Repository.Interfaces;
-using static Models.Dto.Responses.WorkflowStepsResponse.WorkflowStepsSearchListResponse;
-using static Models.Dto.Responses.WorkflowStepsResponse;
 using Models.Dto.Requests;
 
 namespace Repository.Implementations.MailhunterRespository
@@ -34,8 +32,8 @@ namespace Repository.Implementations.MailhunterRespository
             // 先組合 SQL 語句
             QueryTodayAppMhProject();
 
-            var queryWorkflowEntity = (await _unitOfWork.Connection.QueryAsync<AppMhProjectEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
-            result = _mapper.Map<List<AppMhProjectResponse>>(queryWorkflowEntity);
+            var queryEntity = (await _unitOfWork.Connection.QueryAsync<AppMhProjectEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
+            result = _mapper.Map<List<AppMhProjectResponse>>(queryEntity);
 
             return result;
 
@@ -64,8 +62,8 @@ namespace Repository.Implementations.MailhunterRespository
             // 先組合 SQL 語句
             QueryBatchIdAppMhResultSuccessCount(req);
 
-            var queryWorkflowEntity = (await _unitOfWork.Connection.QueryAsync<BatchIdAppMhResultSuccessCountEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
-            result = _mapper.Map<BatchIdAppMhResultSuccessCountResponse>(queryWorkflowEntity);
+            var queryEntity = (await _unitOfWork.Connection.QueryAsync<BatchIdAppMhResultSuccessCountEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
+            result = _mapper.Map<BatchIdAppMhResultSuccessCountResponse>(queryEntity);
 
             return result;
 
