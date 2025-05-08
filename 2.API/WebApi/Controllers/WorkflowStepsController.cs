@@ -9,7 +9,9 @@ namespace WebApi.Controllers
        ILogger<WorkflowStepsController> logger,
        IMailService mailService,
        IWorkflowStepsService workflowStepsService,
-       IFileService fileService
+       IFileService fileService,
+       IMailhunterService mailhunterService
+
        )
        : BaseController(config, mapper)
     {
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
         private readonly IWorkflowStepsService _workflowStepsService = workflowStepsService;
         private readonly IFileService _fileService = fileService;
         private readonly IMailService _mailService = mailService;
+        private readonly IMailhunterService _mailhunterService = mailhunterService;
         #endregion
     }
 }

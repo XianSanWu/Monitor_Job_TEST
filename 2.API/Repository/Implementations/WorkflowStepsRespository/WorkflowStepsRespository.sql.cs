@@ -224,6 +224,12 @@ namespace Repository.Implementations.WorkflowStepsRespository
 
                         switch (meta.MathSymbol.ToUpper())
                         {
+                            case "MAX":
+                            case "MIN":
+                                var mathParamName = $"@cond_{groupIndex}_{columnName} ";
+                                groupConditions.Add($"{columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol}({mathParamName}) ");
+                                break;
+
                             case "IN":
                                 // 特別排除 string 因為 string 也是 IEnumerable
                                 if (meta.Value is IEnumerable<object> list && meta.Value is not string)
@@ -240,7 +246,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
 
                                     if (placeholders.Count > 0)
                                     {
-                                        groupConditions.Add($" {columnName} IN ({string.Join(", ", placeholders)}) ");
+                                        groupConditions.Add($" {columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} ({string.Join(", ", placeholders)}) ");
                                     }
                                 }
                                 break;
@@ -249,11 +255,11 @@ namespace Repository.Implementations.WorkflowStepsRespository
                                 var likeParamName = $"@cond_{groupIndex}_{columnName} ";
                                 if (columnName.EndsWith("At", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    groupConditions.Add($" CONVERT(VARCHAR, {columnName}, 121) LIKE {likeParamName} ");
+                                    groupConditions.Add($" CONVERT(VARCHAR, {columnName}, 121) {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} {likeParamName} ");
                                 }
                                 else
                                 {
-                                    groupConditions.Add($"{columnName} LIKE {likeParamName} ");
+                                    groupConditions.Add($"{columnName} {MathSymbolEnum.FromName(meta.MathSymbol)?.Symbol} {likeParamName} ");
                                 }
 
                                 _sqlParams?.Add(likeParamName, $"%{value}%");

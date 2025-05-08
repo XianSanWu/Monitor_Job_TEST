@@ -46,6 +46,12 @@ namespace Models.Enums
         [Description("模糊查詢")]
         public static readonly MathSymbolEnum Like = new("Like", "LIKE", "模糊查詢");
 
+        [Description("最大值")]
+        public static readonly MathSymbolEnum Max = new("Max", "Max", "最大值");
+
+        [Description("最小值")]
+        public static readonly MathSymbolEnum Min = new("Min", "Min", "最小值");
+
         public string Key { get; }
         public string Symbol { get; }
         public string Description { get; }

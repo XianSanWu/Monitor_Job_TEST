@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Models.Dto.Common;
 using Models.Dto.Requests;
 using Models.Dto.Responses;
 using Models.Enums;
+using System.Linq;
 using System.Text.Json;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 
@@ -16,6 +18,7 @@ namespace WebApi.Controllers
         private string SendBatchFileName => _config["FileReadFileNameSettings:FeibSendBatch"] ?? string.Empty;
         #endregion
 
+        #region UpdateWorkflowStatusMailhunterJob
         [Tags("WorkflowSteps.Job")]
         [HttpPost("UpdateWorkflowStatusMailhunterJob")]
         public async Task<ResultResponse<bool>> UpdateWorkflowStatusMailhunterJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
@@ -61,7 +64,7 @@ namespace WebApi.Controllers
                 #endregion
 
                 #region Step 4: 查詢對應的流程步驟
-                var filterUploadFileNameList = new List<FieldWithMetadataModel>
+                var filterFileNameList = new List<FieldWithMetadataModel>
                 {
                     new FieldWithMetadataModel
                     {
@@ -72,7 +75,7 @@ namespace WebApi.Controllers
                 };
 
 
-                filterUploadFileNameList.Add(new FieldWithMetadataModel
+                filterFileNameList.Add(new FieldWithMetadataModel
                 {
                     Key = "ProgressStatus",
                     MathSymbol = MathSymbolEnum.Equal.ToString(),
@@ -90,7 +93,7 @@ namespace WebApi.Controllers
                     {
                         Channel = ChannelTypeEnum.EDM.ToString()
                     },
-                    FilterModel = filterUploadFileNameList
+                    FilterModel = filterFileNameList
                 };
 
                 var queryWfsList = await _workflowStepsService
@@ -104,7 +107,7 @@ namespace WebApi.Controllers
                 }
                 #endregion
 
-                #region 合併已存在 + 解析後的檔名，做為更新目標
+                #region Step 5: 合併已存在 + 解析後的檔名，做為更新目標
                 var completedJobsSet = new HashSet<string>(parsedLogs.CompletedJobs);
 
                 var mergedUploadFileNames = queryWfsList?.SearchItem
@@ -112,9 +115,15 @@ namespace WebApi.Controllers
                     .Where(name => completedJobsSet.Contains(name ?? string.Empty))
                     .Distinct()
                     .ToList();
+
+                if (mergedUploadFileNames?.Count == 0)
+                {
+                    _logger.LogWarning($"【{jobGuid}】mergedUploadFileNames 沒有可更新資料");
+                    return SuccessResult(result);
+                }
                 #endregion
 
-                #region Step 5: 更新流程步驟狀態為 Mail_Hunter
+                #region Step 6: 更新流程步驟狀態為 Mail_Hunter
                 var fieldReq = new WorkflowStepsUpdateFieldRequest
                 {
                     ProgressStatus = ProgressStatusTypeEnum.Mail_Hunter.ToString()
@@ -149,9 +158,9 @@ namespace WebApi.Controllers
                     await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusMailhunterJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
                     return SuccessResult(result);
                 }
+                #endregion
 
                 result = true;
-                #endregion
             }
             catch (Exception ex)
             {
@@ -168,8 +177,9 @@ namespace WebApi.Controllers
 
             return SuccessResult(result);
         }
+        #endregion
 
-
+        #region UpdateWorkflowStatusFinishJob
         [Tags("WorkflowSteps.Job")]
         [HttpPost("UpdateWorkflowStatusFinishJob")]
         public async Task<ResultResponse<bool>> UpdateWorkflowStatusFinishJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
@@ -177,12 +187,202 @@ namespace WebApi.Controllers
             var jobGuid = $"JobExecutionContext：{JsonSerializer.Serialize(jobExecutionContext)}，JobGuid：{Guid.NewGuid()}";
             var result = false;
 
-            // TO DO
+            try
+            {
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusFinishJob Job 開始執行");
+                #region Step 1: 取得今日Mailhunter專案中有執行的BatchId
+                List<AppMhProjectResponse> appMhProjectList = await _mailhunterService.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
+                if (appMhProjectList?.Count == 0)
+                {
+                    _logger.LogWarning($"【{jobGuid}】GetTodayAppMhProjectList 查詢為空");
+                    return SuccessResult(result);
+                }
+                #endregion
 
+                #region Step 2: 取得WorkflowSteps中，ProgressStatus=Mailhunter&&AccuCdpTotalCount>0的BatchId(去重)
+                var filterFileNameList = new List<FieldWithMetadataModel>
+                {
+                    new FieldWithMetadataModel
+                    {
+                        Key = "ProgressStatus",
+                        MathSymbol = MathSymbolEnum.Equal.ToString(),
+                        Value = ProgressStatusTypeEnum.Mail_Hunter.ToString()
+                    },
+                    new FieldWithMetadataModel
+                    {
+                        Key = "AccuCdpTotalCount",
+                        MathSymbol = MathSymbolEnum.GreaterThan.ToString(),
+                        Value = 0
+                    }
 
+                };
+
+                var searchReq = new WorkflowStepsSearchListRequest
+                {
+                    Page = new PageBase
+                    {
+                        PageIndex = 1,
+                        PageSize = int.MaxValue
+                    },
+                    FieldModel = new WorkflowStepsSearchListFieldModelRequest
+                    {
+                        Channel = ChannelTypeEnum.EDM.ToString()
+                    },
+                    FilterModel = filterFileNameList
+                };
+
+                var queryWfsList = await _workflowStepsService
+                    .QueryWorkflowStepsSearchList(searchReq, cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (queryWfsList?.SearchItem?.Count == 0)
+                {
+                    _logger.LogWarning($"【{jobGuid}】QueryWorkflowStepsSearchList 查詢為空");
+                    return SuccessResult(result);
+                }
+
+                var queryDistinctWfsList = queryWfsList?.SearchItem.Select(x => x.BatchId).Distinct().ToList();
+                #endregion
+
+                #region Step 3: 合集取出要查詢資料
+                var mergedProjectList = appMhProjectList?
+                    .Where(p => queryDistinctWfsList?.Contains(p.ProjectId.ToString()) == true)
+                    .ToList();
+
+                if (mergedProjectList?.Count == 0)
+                {
+                    _logger.LogWarning($"【{jobGuid}】mergedProjectList 沒有可查詢資料");
+                    return SuccessResult(result);
+                }
+                #endregion
+
+                var fieldReq = new WorkflowStepsUpdateFieldRequest();
+                var conditionReq = new List<WorkflowStepsUpdateConditionRequest>();
+                #region Step 4: 如果再app_mh_result中有成功的BatchId，請如果狀態為mailhunter並且成功率大於95%
+                var highSuccessWfsItems = new List<string>();
+                foreach (var project in mergedProjectList ?? [])
+                {
+                    var batchIdSuccess = await _mailhunterService.GetBatchIdAppMhResultSuccessCount(
+                          new BatchIdAppMhResultSuccessCountRequest
+                          {
+                              ProjectId = project.ProjectId
+                          }, cancellationToken).ConfigureAwait(false);
+
+                    if (batchIdSuccess?.SuccessCount <= 0) continue;
+
+                    //如果BatchId成功率大於95%
+                    var highSuccessWfsItem =
+                        queryWfsList?.SearchItem
+                                     .FirstOrDefault(f =>
+                                        f.BatchId == project.ProjectId.ToString() &&
+                                        f.AccuCdpTotalCount > 0 &&
+                                        (batchIdSuccess?.SuccessCount ?? 0) / (double)f.AccuCdpTotalCount > 0.95
+                                     );
+
+                    if (highSuccessWfsItem is null) continue;
+
+                    #region Step 5: 更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量
+                    fieldReq = new WorkflowStepsUpdateFieldRequest
+                    {
+                        MailhunterSuccessCount = batchIdSuccess?.SuccessCount,
+                    };
+
+                    conditionReq = new List<WorkflowStepsUpdateConditionRequest>
+                {
+                    new()
+                    {
+                        InsideLogicOperator = LogicOperatorEnum.AND,
+                        GroupLogicOperator = LogicOperatorEnum.AND,
+                        Channel = new FieldWithMetadataModel
+                        {
+                            MathSymbol = MathSymbolEnum.Equal.ToString(),
+                            Value = ChannelTypeEnum.EDM.ToString()
+                        },
+                        BatchId = new FieldWithMetadataModel
+                        {
+                            MathSymbol = MathSymbolEnum.Equal.ToString(),
+                            Value = project.ProjectId.ToString()
+                        },
+                        CreateAt = new FieldWithMetadataModel
+                        {
+                            MathSymbol = MathSymbolEnum.Max.ToString(),
+                        },
+                    }
+                };
+
+                    var updateWfsList = await _workflowStepsService
+                        .UpdateWorkflowList(fieldReq, conditionReq, cancellationToken)
+                        .ConfigureAwait(false);
+
+                    if (!updateWfsList)
+                    {
+                        _logger.LogWarning($"【{jobGuid}】UpdateWorkflowList 更新失敗，更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量");
+                        await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                        return SuccessResult(result);
+                    }
+                    #endregion
+
+                    highSuccessWfsItems.Add(project.ProjectId.ToString());
+                }
+                #endregion
+
+                fieldReq = new WorkflowStepsUpdateFieldRequest();
+                conditionReq = new List<WorkflowStepsUpdateConditionRequest>();
+                #region 更新WorkflowSteps的狀態為Finish
+                fieldReq = new WorkflowStepsUpdateFieldRequest
+                {
+                    ProgressStatus = ProgressStatusTypeEnum.Finish.ToString(),
+                };
+
+                conditionReq = new List<WorkflowStepsUpdateConditionRequest>
+                {
+                    new()
+                    {
+                        InsideLogicOperator = LogicOperatorEnum.AND,
+                        GroupLogicOperator = LogicOperatorEnum.AND,
+                        Channel = new FieldWithMetadataModel
+                        {
+                            MathSymbol = MathSymbolEnum.Equal.ToString(),
+                            Value = ChannelTypeEnum.EDM.ToString()
+                        },
+                        BatchId = new FieldWithMetadataModel
+                        {
+                            MathSymbol = MathSymbolEnum.In.ToString(),
+                            Value = highSuccessWfsItems
+                        }
+                    }
+                };
+
+                var updateWfsFinishList = await _workflowStepsService
+                    .UpdateWorkflowList(fieldReq, conditionReq, cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (!updateWfsFinishList)
+                {
+                    _logger.LogWarning($"【{jobGuid}】UpdateWorkflowList 更新失敗，更新WorkflowSteps的狀態為Finish");
+                    await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的狀態為Finish", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                    return SuccessResult(result);
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusFinishJob 執行失敗");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                throw new Exception($"【UpdateWorkflowStatusFinishJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
+                //return SuccessResult(result);
+            }
+            finally
+            {
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusFinishJob Job 執行結束");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 執行結束【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+            }
+            result = true;
 
             return SuccessResult(result);
 
         }
+        #endregion
     }
 }
