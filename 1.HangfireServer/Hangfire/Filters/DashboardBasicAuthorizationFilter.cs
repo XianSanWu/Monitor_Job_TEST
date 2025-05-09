@@ -1,12 +1,17 @@
 ﻿using Hangfire.Dashboard;
+using Hangfire_Utilities.Utilities;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 
-public class DashboardBasicAuthorizationFilter : IDashboardAuthorizationFilter
+public class DashboardBasicAuthorizationFilter(IConfiguration config) : IDashboardAuthorizationFilter
 {
-    private readonly string account = "admin_it";
-    private readonly string password = "admin_it";
+    public readonly IConfiguration _config = config;
+    private Dictionary<string, string> Users => _config.GetSection("Users").Get<Dictionary<string, string>>() ?? [];
+    private string key => _config["EncryptionSettings:AESKey"] ?? string.Empty;
+    private string iv => _config["EncryptionSettings:AESIV"] ?? string.Empty;
+    
     private readonly int sessionTimeoutMinutes = 10;
 
     public bool Authorize(DashboardContext context)
@@ -74,8 +79,10 @@ public class DashboardBasicAuthorizationFilter : IDashboardAuthorizationFilter
                 var credentialBytes = Convert.FromBase64String(auth.Parameter ?? string.Empty);
                 var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
 
+                Users.TryGetValue(key: (credentials[0] ?? string.Empty), value: out var password);
+                password = CryptoUtil.Decrypt(Base64Util.Decode(password), key, iv);
                 if (credentials.Length == 2 &&
-                    credentials[0].Equals(account, StringComparison.OrdinalIgnoreCase) &&
+                    //credentials[0].Equals(account, StringComparison.OrdinalIgnoreCase) &&
                     credentials[1].Equals(password, StringComparison.OrdinalIgnoreCase))
                 {
                     var claims = new[]
