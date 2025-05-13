@@ -203,14 +203,12 @@ namespace WebApi.Controllers
                 #region Step 2: 取得WorkflowSteps中，ProgressStatus=Mailhunter&&AccuCdpTotalCount>0的BatchId(去重)
                 var filterFileNameList = new List<FieldWithMetadataModel>
                 {
-                    new FieldWithMetadataModel
-                    {
+                    new() {
                         Key = "ProgressStatus",
                         MathSymbol = MathSymbolEnum.Equal.ToString(),
                         Value = ProgressStatusTypeEnum.Mail_Hunter.ToString()
                     },
-                    new FieldWithMetadataModel
-                    {
+                    new() {
                         Key = "AccuCdpTotalCount",
                         MathSymbol = MathSymbolEnum.GreaterThan.ToString(),
                         Value = 0
@@ -242,12 +240,12 @@ namespace WebApi.Controllers
                     return SuccessResult(result);
                 }
 
-                var queryDistinctWfsList = queryWfsList?.SearchItem.Select(x => x.BatchId).Distinct().ToList();
+                var wfsBatchIdList = queryWfsList?.SearchItem.Select(x => x.BatchId).Distinct().ToList();
                 #endregion
 
                 #region Step 3: 合集取出要查詢資料
                 var mergedProjectList = appMhProjectList?
-                    .Where(p => queryDistinctWfsList?.Contains(p.ProjectId.ToString()) == true)
+                    .Where(p => wfsBatchIdList?.Contains(p.BatchNo.ToString()) == true)
                     .ToList();
 
                 if (mergedProjectList?.Count == 0)
@@ -275,7 +273,7 @@ namespace WebApi.Controllers
                     var highSuccessWfsItem =
                         queryWfsList?.SearchItem
                                      .FirstOrDefault(f =>
-                                        f.BatchId == project.ProjectId.ToString() &&
+                                        f.BatchId == project.BatchNo.ToString() &&
                                         f.AccuCdpTotalCount > 0 &&
                                         (batchIdSuccess?.SuccessCount ?? 0) / (double)f.AccuCdpTotalCount > 0.95
                                      );
@@ -288,28 +286,28 @@ namespace WebApi.Controllers
                         MailhunterSuccessCount = batchIdSuccess?.SuccessCount,
                     };
 
-                    conditionReq = new List<WorkflowStepsUpdateConditionRequest>
-                {
-                    new()
-                    {
-                        InsideLogicOperator = LogicOperatorEnum.AND,
-                        GroupLogicOperator = LogicOperatorEnum.AND,
-                        Channel = new FieldWithMetadataModel
+                    conditionReq =
+                    [
+                        new()
                         {
-                            MathSymbol = MathSymbolEnum.Equal.ToString(),
-                            Value = ChannelTypeEnum.EDM.ToString()
-                        },
-                        BatchId = new FieldWithMetadataModel
-                        {
-                            MathSymbol = MathSymbolEnum.Equal.ToString(),
-                            Value = project.ProjectId.ToString()
-                        },
-                        CreateAt = new FieldWithMetadataModel
-                        {
-                            MathSymbol = MathSymbolEnum.Max.ToString(),
-                        },
-                    }
-                };
+                            InsideLogicOperator = LogicOperatorEnum.AND,
+                            GroupLogicOperator = LogicOperatorEnum.AND,
+                            Channel = new FieldWithMetadataModel
+                            {
+                                MathSymbol = MathSymbolEnum.Equal.ToString(),
+                                Value = ChannelTypeEnum.EDM.ToString()
+                            },
+                            BatchId = new FieldWithMetadataModel
+                            {
+                                MathSymbol = MathSymbolEnum.Equal.ToString(),
+                                Value = project.BatchNo.ToString()
+                            },
+                            CreateAt = new FieldWithMetadataModel
+                            {
+                                MathSymbol = MathSymbolEnum.Max.ToString(),
+                            },
+                        }
+                    ];
 
                     var updateWfsList = await _workflowStepsService
                         .UpdateWorkflowList(fieldReq, conditionReq, cancellationToken)
@@ -323,7 +321,7 @@ namespace WebApi.Controllers
                     }
                     #endregion
 
-                    highSuccessWfsItems.Add(project.ProjectId.ToString());
+                    highSuccessWfsItems.Add(project.BatchNo?.ToString() ?? "");
                 }
                 #endregion
 
@@ -335,8 +333,8 @@ namespace WebApi.Controllers
                     ProgressStatus = ProgressStatusTypeEnum.Finish.ToString(),
                 };
 
-                conditionReq = new List<WorkflowStepsUpdateConditionRequest>
-                {
+                conditionReq =
+                [
                     new()
                     {
                         InsideLogicOperator = LogicOperatorEnum.AND,
@@ -352,7 +350,7 @@ namespace WebApi.Controllers
                             Value = highSuccessWfsItems
                         }
                     }
-                };
+                ];
 
                 var updateWfsFinishList = await _workflowStepsService
                     .UpdateWorkflowList(fieldReq, conditionReq, cancellationToken)
