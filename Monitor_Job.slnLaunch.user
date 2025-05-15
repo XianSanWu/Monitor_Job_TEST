@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "2.API\\Monitor_Job\\WebApi.csproj",
+        "Path": "2.API\\WebApi\\WebApi.csproj",
         "Action": "Start"
       }
     ]
