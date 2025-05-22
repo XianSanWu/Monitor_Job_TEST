@@ -43,7 +43,7 @@ namespace Hangfire.Jobs
             var selectMethod = scheduleType switch
             {
                 ScheduleTypeEnum.UpdateWorkflowStatusMailhunterJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusMailhunterJob),
-                ScheduleTypeEnum.UpdateWorkflowStatusFinishJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusFinishJob),
+                ScheduleTypeEnum.UpdateWorkflowStatusTodayFinishJob => nameof(ScheduleTypeEnum.UpdateWorkflowStatusTodayFinishJob),
                 _ => ""
             };
 

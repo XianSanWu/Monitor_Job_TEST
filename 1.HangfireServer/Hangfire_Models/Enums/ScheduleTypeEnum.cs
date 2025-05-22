@@ -12,7 +12,7 @@ namespace Hangfire_Models.Enums
         [Description("更新流程狀態任務>>Mailhunter")]
         UpdateWorkflowStatusMailhunterJob,
         [Description("更新流程狀態任務>>Finish")]
-        UpdateWorkflowStatusFinishJob,
+        UpdateWorkflowStatusTodayFinishJob,
     }
 
 }

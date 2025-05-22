@@ -179,18 +179,18 @@ namespace WebApi.Controllers
         }
         #endregion
 
-        #region UpdateWorkflowStatusFinishJob
+        #region UpdateWorkflowStatusTodayFinishJob
         [Tags("WorkflowSteps.Job")]
-        [HttpPost("UpdateWorkflowStatusFinishJob")]
-        public async Task<ResultResponse<bool>> UpdateWorkflowStatusFinishJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
+        [HttpPost("UpdateWorkflowStatusTodayFinishJob")]
+        public async Task<ResultResponse<bool>> UpdateWorkflowStatusTodayFinishJob(JobExecutionContext jobExecutionContext, CancellationToken cancellationToken)
         {
             var jobGuid = $"JobExecutionContext：{JsonSerializer.Serialize(jobExecutionContext)}，JobGuid：{Guid.NewGuid()}";
             var result = false;
 
             try
             {
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
-                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusFinishJob Job 開始執行");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusTodayFinishJob Job 開始執行");
                 #region Step 1: 取得今日Mailhunter專案中有執行的BatchId
                 List<AppMhProjectResponse> appMhProjectList = await _mailhunterService.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
                 if (appMhProjectList?.Count == 0)
@@ -316,7 +316,7 @@ namespace WebApi.Controllers
                     if (!updateWfsList)
                     {
                         _logger.LogWarning($"【{jobGuid}】UpdateWorkflowList 更新失敗，更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量");
-                        await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                        await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的BatchId最新一筆MailhunterSuccessCount數量", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
                         return SuccessResult(result);
                     }
                     #endregion
@@ -359,22 +359,22 @@ namespace WebApi.Controllers
                 if (!updateWfsFinishList)
                 {
                     _logger.LogWarning($"【{jobGuid}】UpdateWorkflowList 更新失敗，更新WorkflowSteps的狀態為Finish");
-                    await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的狀態為Finish", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                    await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob UpdateWorkflowList 更新失敗", $"請查看LOG：【{jobGuid}】更新WorkflowSteps的狀態為Finish", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
                     return SuccessResult(result);
                 }
                 #endregion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusFinishJob 執行失敗");
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
-                throw new Exception($"【UpdateWorkflowStatusFinishJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
+                _logger.LogError(ex, $"【{jobGuid}】UpdateWorkflowStatusTodayFinishJob 執行失敗");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob 執行失敗【{jobGuid}】", $"ex：{ex}，exMsg：{ex?.Message}", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                throw new Exception($"【UpdateWorkflowStatusTodayFinishJob】jobGuid：{jobGuid} 發生錯誤，EX：{ex}，EX_MSG：{ex?.Message}");
                 //return SuccessResult(result);
             }
             finally
             {
-                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusFinishJob Job 執行結束");
-                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusFinishJob 執行結束【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
+                _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusTodayFinishJob Job 執行結束");
+                await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob 執行結束【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
             }
             result = true;
 

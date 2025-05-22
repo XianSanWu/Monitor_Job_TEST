@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -14,9 +15,10 @@ namespace Services.Implementations
     /// <remarks>
     /// 建構子：注入 Email 設定與日誌服務
     /// </remarks>
-    public class MailService(IOptions<EmailSettings> settings, ILogger<MailService> logger) : IMailService
+    public class MailService(IConfiguration config, ILogger<MailService> logger) : IMailService
     {
-        private readonly EmailSettings _settings = settings.Value;
+        private readonly IConfiguration _config = config;
+        private EmailSettings Settings => _config.GetSection("EmailSettings").Get<EmailSettings>() ?? new EmailSettings();
         private readonly ILogger<MailService> _logger = logger;
 
         /// <summary>
@@ -49,10 +51,10 @@ namespace Services.Implementations
         {
             try
             {
-                var message = CreateMimeMessage(subject, body, to, cc, sendToAdmin, _settings.AdminMail);
+                var message = CreateMimeMessage(subject, body, to, cc, sendToAdmin, Settings.AdminMail);
                 using var client = new SmtpClient();
-                await client.ConnectAsync(_settings.MailServer, _settings.MailPort, false).ConfigureAwait(false);
-                await client.AuthenticateAsync(_settings.SenderAccount, _settings.SenderPassword).ConfigureAwait(false);
+                await client.ConnectAsync(Settings.MailServer, Settings.MailPort, false).ConfigureAwait(false);
+                await client.AuthenticateAsync(Settings.SenderAccount, Settings.SenderPassword).ConfigureAwait(false);
                 await client.SendAsync(message).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
                 _logger.LogInformation("主信件寄送成功，主旨：{Subject}，收件者：{To}", subject, to);
@@ -70,7 +72,7 @@ namespace Services.Implementations
         /// </summary>
         private async Task<bool> SendColineAsync(string subject, string body)
         {
-            if (_settings.SendToColine?.ToUpper() != "ON")
+            if (Settings.SendToColine?.ToUpper() != "ON")
             {
                 _logger.LogInformation("SendToColine 為 OFF，略過 Coline 通知，主旨：{Subject}", subject);
                 return false;
@@ -79,14 +81,14 @@ namespace Services.Implementations
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(_settings.SenderDisplayName, _settings.SenderAccount));
-                message.To.Add(MailboxAddress.Parse(_settings.ColineMail));
-                message.Subject = $"[{_settings.SenderDisplayName}][{_settings.Environment}] {subject}";
+                message.From.Add(new MailboxAddress(Settings.SenderDisplayName, Settings.SenderAccount));
+                message.To.Add(MailboxAddress.Parse(Settings.ColineMail));
+                message.Subject = $"[{Settings.SenderDisplayName}][{Settings.Environment}] {subject}";
                 message.Body = new TextPart("html") { Text = body };
 
                 using var client = new SmtpClient();
-                await client.ConnectAsync(_settings.MailServer, _settings.MailPort, false).ConfigureAwait(false);
-                await client.AuthenticateAsync(_settings.SenderAccount, _settings.SenderPassword).ConfigureAwait(false);
+                await client.ConnectAsync(Settings.MailServer, Settings.MailPort, false).ConfigureAwait(false);
+                await client.AuthenticateAsync(Settings.SenderAccount, Settings.SenderPassword).ConfigureAwait(false);
                 await client.SendAsync(message).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
 
@@ -106,10 +108,10 @@ namespace Services.Implementations
         private MimeMessage CreateMimeMessage(string subject, string body, string to, string cc, bool sendToAdmin, List<string> adminMailList)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_settings.SenderDisplayName, _settings.SenderAccount));
+            message.From.Add(new MailboxAddress(Settings.SenderDisplayName, Settings.SenderAccount));
 
-            if (!string.IsNullOrWhiteSpace(_settings.MailReply))
-                message.ReplyTo.Add(MailboxAddress.Parse(_settings.MailReply));
+            if (!string.IsNullOrWhiteSpace(Settings.MailReply))
+                message.ReplyTo.Add(MailboxAddress.Parse(Settings.MailReply));
 
             if (!string.IsNullOrWhiteSpace(to))
             {
@@ -129,7 +131,7 @@ namespace Services.Implementations
                     message.To.Add(MailboxAddress.Parse(address));
             }
 
-            message.Subject = $"[{_settings.Environment}] {subject}";
+            message.Subject = $"[{Settings.Environment}] {subject}";
             var eventTime = $"<br>時間:{DateTime.Now:yyyy/MM/dd HH:mm:ss}";
             message.Body = new TextPart("html") { Text = $"{body}{eventTime}" };
             return message;

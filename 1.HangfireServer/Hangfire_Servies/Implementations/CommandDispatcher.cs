@@ -38,7 +38,7 @@ namespace Hangfire_Servies.Implementations
             _port = _config.GetValue<string>("ApiSettings:0:Port") ?? string.Empty;
             _basePath = _config.GetValue<string>("ApiSettings:0:BasePath") ?? string.Empty;
             _path_mailhunterJob = _config.GetValue<string>("ApiSettings:0:WorkflowSteps:UpdateWorkflowStatusMailhunterJob") ?? string.Empty;
-            _path_finishJob = _config.GetValue<string>("ApiSettings:0:WorkflowSteps:UpdateWorkflowStatusFinishJob") ?? string.Empty;
+            _path_finishJob = _config.GetValue<string>("ApiSettings:0:WorkflowSteps:UpdateWorkflowStatusTodayFinishJob") ?? string.Empty;
         }
 
         public async Task DispatchAsync(JobExecutionContext jobExecutionContext)
@@ -64,7 +64,7 @@ namespace Hangfire_Servies.Implementations
                 #endregion
 
                 #region 更新流程狀態任務>>Finish
-                case nameof(ScheduleTypeEnum.UpdateWorkflowStatusFinishJob):
+                case nameof(ScheduleTypeEnum.UpdateWorkflowStatusTodayFinishJob):
                     apiUrl = $"{_scheme}://{_host}{(!string.IsNullOrWhiteSpace(_port) ? $":{_port}" : "")}/{_basePath}/{_path_finishJob}";
 
                     result = await _apiService.CallApiAsync(
