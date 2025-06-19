@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Hangfire.Dashboard.Management.v2.Support;
 using Hangfire_Models.Enums;
 using Hangfire_Models.Dto.Requests;
+using System.Text.Json;
 
 namespace Hangfire.Jobs
 {
@@ -35,7 +36,11 @@ namespace Hangfire.Jobs
             HourEnum hour,
 
             [DisplayData(Label = "分鐘", Description = "請選擇 0 到 59 分鐘", DefaultValue = MinuteEnum.None, IsRequired = true)]
-            MinuteEnum minute
+            MinuteEnum minute,
+
+            // ★ 這是你要新增的參數欄位
+            [DisplayData(Label = "參數集合", Placeholder = @"請輸入JSON格式", Description = @"請以 JSON 格式填寫參數集合。{""Date"":""2025-01-01"",""ProjectId"":""123""}")]
+            string? parametersJson
         )
         {
             var jobKey = $"{jobName}";//_{selectMethod}
@@ -47,11 +52,18 @@ namespace Hangfire.Jobs
                 _ => ""
             };
 
+            var parameters = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(parametersJson))
+            {
+                parameters = JsonSerializer.Deserialize<Dictionary<string, string>>(parametersJson);
+            }
+
             var jobExecutionContext = new JobExecutionContext
             {
                 JobKey = jobKey,
                 JobId = context.BackgroundJob.Id,
                 SelectMethod = selectMethod,
+                Parameters = parameters,
             };
 
 

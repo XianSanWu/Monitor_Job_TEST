@@ -6,6 +6,6 @@
         public string? JobId { get; set; } = "";
         public string? SelectMethod { get; set; } = "";
         public string? CurrentExecutionId { get; set; } = "";
-
+        public Dictionary<string, string>? Parameters { get; set; } = new();
     }
 }

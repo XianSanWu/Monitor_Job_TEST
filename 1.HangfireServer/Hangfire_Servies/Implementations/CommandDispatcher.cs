@@ -3,7 +3,6 @@ using Hangfire_Models.Enums;
 using Hangfire_Servies.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Hangfire_Servies.Implementations
@@ -55,7 +54,7 @@ namespace Hangfire_Servies.Implementations
                     result = await _apiService.CallApiAsync(
                         apiUrl: apiUrl,
                         method: HttpMethod.Post,
-                        queryParams: null,         // 無 URL 參數
+                        queryParams: jobExecutionContext.Parameters,         // 無 URL 參數
                         bodyContent: JsonSerializer.Serialize(jobExecutionContext)          // 無 POST Body
                     ).ConfigureAwait(false) ?? string.Empty;
 

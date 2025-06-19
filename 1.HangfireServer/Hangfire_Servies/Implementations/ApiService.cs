@@ -22,7 +22,7 @@ namespace Hangfire_Servies.Implementations
             // 加入 URL 參數
             if (queryParams != null && queryParams.Count > 0)
             {
-                var query = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
+                var query = string.Join("&", queryParams.Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value?.ToString() ?? "")}"));
                 apiUrl += apiUrl.Contains("?") ? "&" + query : "?" + query;
             }
 

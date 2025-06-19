@@ -84,6 +84,12 @@ try
             DisableGlobalLocks = true // 提升效能
         });
 
+        // 可視需求開啟 (如果你想讓失敗任務不重試，避免卡住)
+        GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
+
+        // 可視需求開啟 (如果你想讓任務在執行時有動態過期時間)
+        GlobalJobFilters.Filters.Add(new DynamicExpirationTimeFilter());
+
     });
 
     builder.Services.AddHangfireServer(options =>
