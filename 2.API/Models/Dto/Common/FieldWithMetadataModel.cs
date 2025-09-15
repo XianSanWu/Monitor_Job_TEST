@@ -1,6 +1,4 @@
-﻿using Models.Enums;
-
-namespace Models.Dto.Common
+﻿namespace Models.Dto.Common
 {
     public class FieldWithMetadataModel
     {
