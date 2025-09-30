@@ -4,17 +4,26 @@ using Microsoft.Extensions.Logging;
 using Models.Dto.Requests;
 using Models.Dto.Responses;
 using Models.Enums;
-using Repository.Implementations;
-using Repository.Implementations.MailhunterRespository;
 using Repository.Interfaces;
 using Services.Interfaces;
+using Repository.UnitOfWorkExtension;
 
 namespace Services.Implementations
 {
-    public class MailhunterService(ILogger<MailhunterService> logger, IConfiguration config, IMapper mapper) : IMailhunterService
+    public class MailhunterService(
+        ILogger<MailhunterService> logger, 
+        IConfiguration config,
+        IMapper mapper,
+        IUnitOfWorkFactory uowFactory,
+        IRepositoryFactory repositoryFactory,
+        IUnitOfWorkScopeAccessor scopeAccessor
+        ) : IMailhunterService
     {
         private readonly ILogger<MailhunterService> _logger = logger;
         private readonly IConfiguration _config = config;
+        private readonly IUnitOfWorkFactory _uowFactory = uowFactory;
+        private readonly IRepositoryFactory _repositoryFactory = repositoryFactory;
+        private readonly IUnitOfWorkScopeAccessor _scopeAccessor = scopeAccessor;
 
         /// <summary>
         /// 查詢當天的專案資料(多筆)
@@ -28,15 +37,16 @@ namespace Services.Implementations
             #endregion
 
             #region 流程
-            var MHU_dbHelper = new DbHelper(_config, DBConnectionEnum.Mail_hunter);
+            var dbType = DBConnectionEnum.Mail_hunter;
 #if TEST
-            MHU_dbHelper = new DbHelper(_config, DBConnectionEnum.DefaultConnection);
+            dbType = DBConnectionEnum.DefaultConnection;
 #endif
-            using (IDbHelper dbHelper = MHU_dbHelper)
-            {
-                IMailhunterRespository _mhuRp = new MailhunterRespository(dbHelper.UnitOfWork, mapper);
-                result = await _mhuRp.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
-            }
+            using var uow = _uowFactory.UseUnitOfWork(_scopeAccessor, dbType);
+
+            // 改成通用 Factory 呼叫
+            var repo = _repositoryFactory.Create<IMailhunterRespository>(_scopeAccessor);
+
+            result = await repo.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
 
             return result;
             #endregion
@@ -55,15 +65,16 @@ namespace Services.Implementations
             #endregion
 
             #region 流程
-            var MHU_dbHelper = new DbHelper(_config, DBConnectionEnum.Mail_hunter);
+            var dbType = DBConnectionEnum.Mail_hunter;
 #if TEST
-            MHU_dbHelper = new DbHelper(_config, DBConnectionEnum.DefaultConnection);
+            dbType = DBConnectionEnum.DefaultConnection;
 #endif
-            using (IDbHelper dbHelper = MHU_dbHelper)
-            {
-                IMailhunterRespository _mhuRp = new MailhunterRespository(dbHelper.UnitOfWork, mapper);
-                result = await _mhuRp.GetBatchIdAppMhResultSuccessCount(req, cancellationToken).ConfigureAwait(false);
-            }
+            using var uow = _uowFactory.UseUnitOfWork(_scopeAccessor, dbType);
+
+            // 改成通用 Factory 呼叫
+            var repo = _repositoryFactory.Create<IMailhunterRespository>(_scopeAccessor);
+
+            result = await repo.GetBatchIdAppMhResultSuccessCount(req, cancellationToken).ConfigureAwait(false);
 
             return result;
             #endregion

@@ -8,7 +8,7 @@ using Models.Dto.Requests;
 namespace Repository.Implementations.MailhunterRespository
 {
     public partial class MailhunterRespository(IUnitOfWork unitOfWork, IMapper mapper)
-        : BaseRepository(unitOfWork, mapper), IMailhunterRespository
+        : BaseRepository(unitOfWork, mapper), IMailhunterRespository, IRepository
     {
         /// <summary>
         /// 查詢當天的專案資料(多筆)

@@ -3,7 +3,7 @@ using static Models.Dto.Responses.WorkflowStepsResponse;
 
 namespace Repository.Interfaces
 {
-    public interface IWorkflowStepsRespository
+    public interface IWorkflowStepsRespository : IRepository
     {
         /// <summary>
         /// 工作進度查詢DB

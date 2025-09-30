@@ -3,7 +3,7 @@ using Models.Dto.Responses;
 
 namespace Repository.Interfaces
 {
-    public interface IMailhunterRespository
+    public interface IMailhunterRespository : IRepository
     {
         /// <summary>
         /// 查詢當天的專案資料(多筆)DB
