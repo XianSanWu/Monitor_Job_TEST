@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<SatelliteResourceLanguages>en-US;de-DE</SatelliteResourceLanguages>
 	<Configurations>Debug;Release;TEST</Configurations>
+	<UserSecretsId>ef2271cc-6d4a-4461-9c44-f25910add67a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
