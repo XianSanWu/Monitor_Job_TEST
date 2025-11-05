@@ -1,11 +1,11 @@
 ﻿using Hangfire_Models.Dto.Requests;
 using Hangfire_Models.Enums;
-using Hangfire_Servies.Interfaces;
+using Hangfire_Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace Hangfire_Servies.Implementations
+namespace Hangfire_Services.Implementations
 {
     public class CommandDispatcher : ICommandDispatcher
     {

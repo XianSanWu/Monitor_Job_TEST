@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.Dto.Requests;
-using Models.Dto.Responses;
+using Models.Entities.Requests;
 using Models.Enums;
 using Repository.Interfaces;
-using Services.Interfaces;
 using Repository.UnitOfWorkExtension;
+using Services.Interfaces;
+using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
+using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 
 namespace Services.Implementations
 {
@@ -30,12 +32,8 @@ namespace Services.Implementations
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<List<AppMhProjectResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
+        public async Task<List<AppMhProjectSearchResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
         {
-            #region 參數宣告
-            var result = new List<AppMhProjectResponse>();
-            #endregion
-
             #region 流程
             var dbType = DBConnectionEnum.Mail_hunter;
 #if TEST
@@ -45,8 +43,8 @@ namespace Services.Implementations
 
             // 改成通用 Factory 呼叫
             var repo = _repositoryFactory.Create<IMailhunterRespository>(_scopeAccessor);
-
-            result = await repo.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
+            var entityResp = await repo.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
+            var result = mapper.Map<List<AppMhProjectSearchResponse>>(entityResp);
 
             return result;
             #endregion
@@ -58,11 +56,9 @@ namespace Services.Implementations
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<BatchIdAppMhResultSuccessCountResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
+        public async Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
         {
-            #region 參數宣告
-            var result = new BatchIdAppMhResultSuccessCountResponse();
-            #endregion
+            var entityReq = mapper.Map<BatchIdAppMhResultSuccessCountEntityRequest>(req);
 
             #region 流程
             var dbType = DBConnectionEnum.Mail_hunter;
@@ -73,8 +69,8 @@ namespace Services.Implementations
 
             // 改成通用 Factory 呼叫
             var repo = _repositoryFactory.Create<IMailhunterRespository>(_scopeAccessor);
-
-            result = await repo.GetBatchIdAppMhResultSuccessCount(req, cancellationToken).ConfigureAwait(false);
+            var entityResp = await repo.GetBatchIdAppMhResultSuccessCount(entityReq, cancellationToken).ConfigureAwait(false);
+            var result = mapper.Map<BatchIdAppMhResultSuccessCountSearchResponse>(entityResp);
 
             return result;
             #endregion

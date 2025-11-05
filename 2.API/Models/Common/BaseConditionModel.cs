@@ -1,6 +1,6 @@
 ﻿using Models.Enums;
 
-namespace Models.Dto.Common
+namespace Models.Common
 {
     public class BaseConditionModel
     {

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Dapper;
-using Models.Entities;
 using Repository.Interfaces;
-using static Models.Dto.Requests.WorkflowStepsRequest;
-using static Models.Dto.Responses.WorkflowStepsResponse;
-using static Models.Dto.Responses.WorkflowStepsResponse.WorkflowStepsSearchListResponse;
+using static Models.Entities.Requests.WorkflowStepsEntityRequest;
+using static Models.Entities.Responses.WorkflowEntityResponse;
 
 namespace Repository.Implementations.WorkflowStepsRespository
 {
@@ -17,11 +15,11 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// <param name="searchReq"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest searchReq, CancellationToken cancellationToken = default)
+        public async Task<WorkflowStepsEntitySearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListEntityRequest searchReq, CancellationToken cancellationToken = default)
         {
             #region 參數宣告
 
-            var result = new WorkflowStepsSearchListResponse();
+            var result = new WorkflowStepsEntitySearchListResponse();
 
             #endregion
 
@@ -34,11 +32,11 @@ namespace Repository.Implementations.WorkflowStepsRespository
             QueryWorkflowSql(searchReq);
 
             result.Page = searchReq.Page;
-            result.SearchItem = new List<WorkflowStepsSearchResponse>();
+            result.SearchItem = new List<WorkflowEntity>();
 
             var _pagingSql = await GetPagingSql(searchReq.Page, _unitOfWork, _sqlParams).ConfigureAwait(false);
             var queryWorkflowEntity = (await _unitOfWork.Connection.QueryAsync<WorkflowEntity>(_pagingSql, _sqlParams).ConfigureAwait(false)).ToList();
-            result.SearchItem = _mapper.Map<List<WorkflowStepsSearchResponse>>(queryWorkflowEntity);
+            result.SearchItem = _mapper.Map<List<WorkflowEntity>>(queryWorkflowEntity);
             result.Page.TotalCount = (await _unitOfWork.Connection.QueryAsync<int?>(GetTotalCountSql(), _sqlParams).ConfigureAwait(false)).FirstOrDefault() ?? 0;
 
             return result;
@@ -53,7 +51,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// <param name="conditionReq"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<bool> UpdateWorkflowList(WorkflowStepsUpdateFieldRequest fieldReq, List<WorkflowStepsUpdateConditionRequest> conditionReq, CancellationToken cancellationToken)
+        public async Task<bool> UpdateWorkflowList(WorkflowStepsUpdateFieldEntityRequest fieldReq, List<WorkflowStepsUpdateConditionEntityRequest> conditionReq, CancellationToken cancellationToken)
         {
             #region 參數宣告
 

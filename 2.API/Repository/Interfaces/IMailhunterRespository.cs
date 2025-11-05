@@ -1,5 +1,6 @@
-﻿using Models.Dto.Requests;
-using Models.Dto.Responses;
+﻿using Models.Entities.Requests;
+using static Models.Entities.Responses.AppMhProjectEntityResponse;
+using static Models.Entities.Responses.BatchIdAppMhResultSuccessCountEntityResponse;
 
 namespace Repository.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Repository.Interfaces
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<List<AppMhProjectResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken);
+        Task<List<AppMhProjectEntity>> GetTodayAppMhProjectList(CancellationToken cancellationToken);
 
         /// <summary>
         /// 查詢BatchId成功數量(單筆)DB
@@ -18,7 +19,7 @@ namespace Repository.Interfaces
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<BatchIdAppMhResultSuccessCountResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken);
+        Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntityRequest req, CancellationToken cancellationToken);
 
     }
 }

@@ -1,5 +1,4 @@
-﻿using Models.Dto.Common;
-
+﻿using Models.Common;
 
 namespace Models.Dto.Responses
 {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Requests;
 using Models.Dto.Responses;
+using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
+using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 
 namespace WebApi.Controllers
 {
@@ -14,10 +16,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("Mailhunter.Action")]  //分組(可多標籤)        
         [HttpPost("GetTodayAppMhProjectList")]
-        public async Task<ResultResponse<List<AppMhProjectResponse>>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
+        public async Task<ResultResponse<List<AppMhProjectSearchResponse>>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
         {
             #region 參數宣告
-            var result = new List<AppMhProjectResponse>();
+            var result = new List<AppMhProjectSearchResponse>();
             #endregion
 
             #region 流程
@@ -37,10 +39,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("Mailhunter.Action")]  //分組(可多標籤)        
         [HttpPost("GetBatchIdAppMhResultSuccessCount")]
-        public async Task<ResultResponse<BatchIdAppMhResultSuccessCountResponse>> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
+        public async Task<ResultResponse<BatchIdAppMhResultSuccessCountSearchResponse>> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
         {
             #region 參數宣告
-            var result = new BatchIdAppMhResultSuccessCountResponse();
+            var result = new BatchIdAppMhResultSuccessCountSearchResponse();
             #endregion
 
             #region 流程

@@ -1,6 +1,6 @@
-﻿namespace Models.Dto.Common
+﻿namespace Models.Common
 {
-    public class BaseModel
+    public class BaseSearchModel
     {
         #region Properties
         /// <summary> 分頁資訊 </summary>
@@ -9,12 +9,13 @@
 
         /// <summary> CRUD的動作(含權限) </summary>
         //public string? ActiveType { get; set; }
+
+        /// <summary> 前端表頭欄位篩選 </summary>
+        public List<FieldWithMetadataModel>? FilterModel { get; set; }
+
+        /// <summary>  前端表頭排序，後端 SQL order by (asc/desc) </summary>
+        public Option? SortModel { get; set; }
         #endregion
     }
 
-    public class Option
-    {
-        public string? Key { get; set; }
-        public object? Value { get; set; }
-    }
 }

@@ -1,6 +1,6 @@
-﻿namespace Models.Entities
+﻿namespace Models.Entities.Requests
 {
-    public class AppMhProjectEntity
+    public class BatchIdAppMhResultSuccessCountEntityRequest
     {
         public int ProjectId { get; set; }
         public string? ProjectName { get; set; }

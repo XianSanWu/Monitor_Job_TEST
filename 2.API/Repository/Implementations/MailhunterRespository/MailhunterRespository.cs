@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Dapper;
-using Models.Dto.Responses;
-using Models.Entities;
+using Models.Entities.Requests;
 using Repository.Interfaces;
-using Models.Dto.Requests;
+using static Models.Entities.Responses.AppMhProjectEntityResponse;
+using static Models.Entities.Responses.BatchIdAppMhResultSuccessCountEntityResponse;
 
 namespace Repository.Implementations.MailhunterRespository
 {
@@ -16,11 +16,11 @@ namespace Repository.Implementations.MailhunterRespository
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<List<AppMhProjectResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
+        public async Task<List<AppMhProjectEntity>> GetTodayAppMhProjectList(CancellationToken cancellationToken)
         {
             #region 參數宣告
 
-            var result = new List<AppMhProjectResponse>();
+            var result = new List<AppMhProjectEntity>();
 
             #endregion
 
@@ -33,7 +33,7 @@ namespace Repository.Implementations.MailhunterRespository
             QueryTodayAppMhProject();
 
             var queryEntity = (await _unitOfWork.Connection.QueryAsync<AppMhProjectEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
-            result = _mapper.Map<List<AppMhProjectResponse>>(queryEntity);
+            result = _mapper.Map<List<AppMhProjectEntity>>(queryEntity);
 
             return result;
 
@@ -46,11 +46,11 @@ namespace Repository.Implementations.MailhunterRespository
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<BatchIdAppMhResultSuccessCountResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
+        public async Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntityRequest req, CancellationToken cancellationToken)
         {
             #region 參數宣告
 
-            var result = new BatchIdAppMhResultSuccessCountResponse();
+            var result = new BatchIdAppMhResultSuccessCountEntity();
 
             #endregion
 
@@ -63,7 +63,7 @@ namespace Repository.Implementations.MailhunterRespository
             QueryBatchIdAppMhResultSuccessCount(req);
 
             var queryEntity = (await _unitOfWork.Connection.QueryAsync<BatchIdAppMhResultSuccessCountEntity>(_sqlStr?.ToString() ?? string.Empty, _sqlParams).ConfigureAwait(false)).ToList();
-            result = _mapper.Map<BatchIdAppMhResultSuccessCountResponse>(queryEntity);
+            result = _mapper.Map<BatchIdAppMhResultSuccessCountEntity>(queryEntity);
 
             return result;
 

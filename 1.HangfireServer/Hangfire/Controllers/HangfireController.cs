@@ -1,9 +1,4 @@
-﻿
-using Hangfire.Server;
-using Hangfire_Servies.Interfaces;
-using System.ComponentModel;
-
-namespace Hangfire.Controllers
+﻿namespace Hangfire.Controllers
 {
     /// <summary>
     /// 

@@ -5,7 +5,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:59000", // 更改為空閒端口
-      "sslPort": 44369 // 設置 SSL 端口
+      "sslPort": 44370 // 設置 SSL 端口
     }
   },
   "profiles": {

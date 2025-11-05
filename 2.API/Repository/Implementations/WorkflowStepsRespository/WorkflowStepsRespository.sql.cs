@@ -1,11 +1,11 @@
 ﻿using Dapper;
-using Models.Dto.Common;
-using Models.Entities;
+using Models.Common;
+using Models.Entities.Responses;
 using Models.Enums;
 using Repository.Interfaces;
 using System.Text;
 using Utilities.Utilities;
-using static Models.Dto.Requests.WorkflowStepsRequest;
+using static Models.Entities.Requests.WorkflowStepsEntityRequest;
 
 namespace Repository.Implementations.WorkflowStepsRespository
 {
@@ -15,7 +15,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// 工作進度查詢DB
         /// </summary>
         /// <param name="searchReq"></param>
-        private void QueryWorkflowSql(WorkflowStepsSearchListRequest searchReq)
+        private void QueryWorkflowSql(WorkflowStepsSearchListEntityRequest searchReq)
         {
             _sqlStr = new StringBuilder();
             _sqlStr?.Append(@" SELECT * FROM Workflow WITH (NOLOCK) WHERE 1=1 ");
@@ -32,7 +32,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
             #endregion
 
             #region  處理 FilterModel Grid (模糊查詢)
-            var validColumns = Reflection.GetValidColumns<WorkflowEntity>();
+            var validColumns = Reflection.GetValidColumns<WorkflowEntityResponse>();
 
             if (searchReq.FilterModel != null)
             {
@@ -120,7 +120,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// </summary>
         /// <param name="fieldReq"></param>
         /// <param name="conditionReq"></param>
-        private void UpdateWorkflowSql(WorkflowStepsUpdateFieldRequest fieldReq, List<WorkflowStepsUpdateConditionRequest> conditionReq)
+        private void UpdateWorkflowSql(WorkflowStepsUpdateFieldEntityRequest fieldReq, List<WorkflowStepsUpdateConditionEntityRequest> conditionReq)
         {
             _sqlStr = new StringBuilder();
             _sqlStr?.Append("UPDATE Workflow SET ");

@@ -1,4 +1,4 @@
-﻿namespace Models.Dto.Common
+﻿namespace Models.Common
 {
     public class PageBase
     {

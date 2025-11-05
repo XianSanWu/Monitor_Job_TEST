@@ -1,16 +1,16 @@
 ﻿using Models.Common;
 
-namespace Models.Dto.Requests
+namespace Models.Entities.Requests
 {
-    public class WorkflowStepsRequest
+    public class WorkflowStepsEntityRequest
     {
         #region 查詢用
-        public class WorkflowStepsSearchListRequest : BaseSearchModel
+        public class WorkflowStepsSearchListEntityRequest : BaseSearchModel
         {
-            public WorkflowStepsSearchListFieldModelRequest? FieldModel { get; set; }
+            public WorkflowStepsSearchListFieldModelEntityRequest? FieldModel { get; set; }
         }
 
-        public class WorkflowStepsSearchListFieldModelRequest
+        public class WorkflowStepsSearchListFieldModelEntityRequest
         {
             public string? Channel { get; set; }
         }
@@ -19,16 +19,16 @@ namespace Models.Dto.Requests
         #region 更新用
 
         #region 工作流程更新
-        public class WorkflowUpdateListRequest
+        public class UpdateWorkflowListEntityRequest
         {
-            public WorkflowStepsUpdateFieldRequest FieldReq { get; set; } = new();
-            public List<WorkflowStepsUpdateConditionRequest> ConditionReq { get; set; } = new();
+            public WorkflowStepsUpdateFieldEntityRequest FieldReq { get; set; } = new();
+            public List<WorkflowStepsUpdateConditionEntityRequest> ConditionReq { get; set; } = new();
         }
         #endregion
 
         #region 工作流程更新[欄位]
         /// <summary> 工作流程更新[欄位] </summary>
-        public class WorkflowStepsUpdateFieldRequest
+        public class WorkflowStepsUpdateFieldEntityRequest
         {
             /// <summary>主鍵</summary>
             public int SN { get; set; }
@@ -112,7 +112,7 @@ namespace Models.Dto.Requests
 
         #region 工作流程更新[條件]
         /// <summary>工作流程更新[條件]</summary>
-        public class WorkflowStepsUpdateConditionRequest : BaseConditionModel
+        public class WorkflowStepsUpdateConditionEntityRequest : BaseConditionModel
         {
             /// <summary>主鍵</summary>
             public FieldWithMetadataModel SN { get; set; } = new();

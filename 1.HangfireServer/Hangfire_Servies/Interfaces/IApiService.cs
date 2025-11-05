@@ -1,5 +1,4 @@
-﻿
-namespace Hangfire_Servies.Interfaces
+﻿namespace Hangfire_Services.Interfaces
 {
     public interface IApiService
     {

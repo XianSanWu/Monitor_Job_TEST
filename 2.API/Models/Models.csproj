@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Entities\AppMhResultEntity.cs" />
+    <None Include="Entities\Responses\AppMhResultEntityResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>

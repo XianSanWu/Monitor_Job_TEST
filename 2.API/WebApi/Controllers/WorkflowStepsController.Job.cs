@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Models.Dto.Common;
+using Models.Common;
 using Models.Dto.Requests;
 using Models.Dto.Responses;
 using Models.Enums;
 using System.Text.Json;
 using static Models.Dto.Requests.WorkflowStepsRequest;
+using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 
 namespace WebApi.Controllers
 {
@@ -191,7 +192,7 @@ namespace WebApi.Controllers
                 await _mailService.SendMailAndColineAsync($"UpdateWorkflowStatusTodayFinishJob 開始執行【{jobGuid}】", "", "", "", true, $"【{jobGuid}】").ConfigureAwait(false);
                 _logger.LogInformation($"【{jobGuid}】UpdateWorkflowStatusTodayFinishJob Job 開始執行");
                 #region Step 1: 取得今日Mailhunter專案中有執行的BatchId
-                List<AppMhProjectResponse> appMhProjectList = await _mailhunterService.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
+                List<AppMhProjectSearchResponse> appMhProjectList = await _mailhunterService.GetTodayAppMhProjectList(cancellationToken).ConfigureAwait(false);
                 if (appMhProjectList?.Count == 0)
                 {
                     _logger.LogWarning($"【{jobGuid}】GetTodayAppMhProjectList 查詢為空");

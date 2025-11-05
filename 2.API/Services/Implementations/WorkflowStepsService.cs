@@ -3,10 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.Enums;
 using Repository.Interfaces;
+using Repository.UnitOfWorkExtension;
 using Services.Interfaces;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 using static Models.Dto.Responses.WorkflowStepsResponse;
-using Repository.UnitOfWorkExtension;
+using static Models.Entities.Requests.WorkflowStepsEntityRequest;
 
 namespace Services.Implementations
 {
@@ -28,14 +29,12 @@ namespace Services.Implementations
         /// <summary>
         /// 工作進度查詢
         /// </summary>
-        /// <param name="searchReq"></param>
+        /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest searchReq, CancellationToken cancellationToken = default)
+        public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest req, CancellationToken cancellationToken = default)
         {
-            #region 參數宣告
-            var result = new WorkflowStepsSearchListResponse();
-            #endregion
+            var entityReq = mapper.Map<WorkflowStepsSearchListEntityRequest>(req);
 
             #region 流程
             var dbType = DBConnectionEnum.Cdp;
@@ -46,9 +45,9 @@ namespace Services.Implementations
 
             // 改成通用 Factory 呼叫
             var repo = _repositoryFactory.Create<IWorkflowStepsRespository>(_scopeAccessor);
-
-            result = await repo.QueryWorkflowStepsSearchList(searchReq, cancellationToken).ConfigureAwait(false);
-
+            var entityResp = await repo.QueryWorkflowStepsSearchList(entityReq, cancellationToken);
+            var result = mapper.Map<WorkflowStepsSearchListResponse>(entityResp);
+            
             return result;
             #endregion
         }
@@ -62,6 +61,9 @@ namespace Services.Implementations
         /// <returns></returns>
         public async Task<bool> UpdateWorkflowList(WorkflowStepsUpdateFieldRequest fieldReq, List<WorkflowStepsUpdateConditionRequest> conditionReq, CancellationToken cancellationToken)
         {
+            var entityFieldReq = mapper.Map<WorkflowStepsUpdateFieldEntityRequest>(fieldReq);
+            var entityConditionReq = mapper.Map<List<WorkflowStepsUpdateConditionEntityRequest>>(conditionReq);
+
             #region 參數宣告
             var result = false;
             #endregion
@@ -76,7 +78,7 @@ namespace Services.Implementations
             // 改成通用 Factory 呼叫
             var repo = _repositoryFactory.Create<IWorkflowStepsRespository>(_scopeAccessor);
 
-            result = await repo.UpdateWorkflowList(fieldReq, conditionReq, cancellationToken).ConfigureAwait(false);
+            result = await repo.UpdateWorkflowList(entityFieldReq, entityConditionReq, cancellationToken).ConfigureAwait(false);
 
             return result;
             #endregion

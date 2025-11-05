@@ -1,5 +1,6 @@
 ﻿using Models.Dto.Requests;
-using Models.Dto.Responses;
+using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
+using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 
 namespace Services.Interfaces
 {
@@ -10,7 +11,7 @@ namespace Services.Interfaces
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<List<AppMhProjectResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken);
+        Task<List<AppMhProjectSearchResponse>> GetTodayAppMhProjectList(CancellationToken cancellationToken);
 
         /// <summary>
         /// 查詢BatchId成功數量(單筆)
@@ -18,7 +19,7 @@ namespace Services.Interfaces
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<BatchIdAppMhResultSuccessCountResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken);
+        Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken);
 
     }
 }

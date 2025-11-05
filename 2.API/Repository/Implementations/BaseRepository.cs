@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using Models.Dto.Common;
+using Models.Common;
 using Models.Enums;
 using Repository.Interfaces;
 using System.Text;

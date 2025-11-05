@@ -1,13 +1,8 @@
-﻿using Hangfire_Servies.Interfaces;
+﻿using Hangfire_Services.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Hangfire_Servies.Implementations
+namespace Hangfire_Services.Implementations
 {
 
     public class ApiService(IHttpClientFactory httpClientFactory, ILogger<ApiService> logger) : IApiService

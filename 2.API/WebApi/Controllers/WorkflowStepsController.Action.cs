@@ -199,7 +199,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("WorkflowSteps.Action")]  //分組(可多標籤)        
         [HttpPost("UpdateWorkflowList")]
-        public async Task<ResultResponse<bool>> UpdateWorkflowList(UpdateWorkflowListRequest req, CancellationToken cancellationToken)
+        public async Task<ResultResponse<bool>> UpdateWorkflowList(WorkflowUpdateListRequest req, CancellationToken cancellationToken)
         {
             #region 參數宣告
             var result = false;

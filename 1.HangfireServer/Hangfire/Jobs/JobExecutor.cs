@@ -1,8 +1,6 @@
-﻿
-using Hangfire.Filters;
+﻿using Hangfire.Filters;
 using Hangfire_Models.Dto.Requests;
-using Hangfire_Servies.Interfaces;
-using Serilog.Context;
+using Hangfire_Services.Interfaces;
 
 namespace Hangfire.Jobs
 {
