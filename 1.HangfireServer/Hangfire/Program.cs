@@ -45,9 +45,7 @@ try
 
     #region Hangfire ³]©w
     var hangfire_conn = builder.Configuration.GetConnectionString("Cdp");
-#if TEST
-    hangfire_conn = builder.Configuration.GetConnectionString("DefaultConnection");
-#endif
+
     hangfire_conn = CryptoUtil.Decrypt(Base64Util.Decode(hangfire_conn ?? string.Empty), key, iv);
 
     builder.Services.AddHangfire(config =>
