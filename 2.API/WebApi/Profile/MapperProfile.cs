@@ -1,11 +1,13 @@
 ﻿using Models.Dto.Requests;
 using Models.Entities.Requests;
+using static Models.Dto.Requests.BatchIdAppMhResultSuccessCountRequest;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 using static Models.Dto.Responses.AppMhResultResponse.AppMhResultSearchListResponse;
 using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 using static Models.Dto.Responses.WorkflowStepsResponse;
 using static Models.Dto.Responses.WorkflowStepsResponse.WorkflowStepsSearchListResponse;
+using static Models.Entities.Requests.BatchIdAppMhResultSuccessCountEntityRequest;
 using static Models.Entities.Requests.WorkflowStepsEntityRequest;
 using static Models.Entities.Responses.AppMhProjectEntityResponse;
 using static Models.Entities.Responses.AppMhResultEntityResponse;
@@ -22,13 +24,17 @@ namespace WebApi.Profile
             // Service Request → Repository Request
             // AppMh
             CreateMap<BatchIdAppMhResultSuccessCountRequest, BatchIdAppMhResultSuccessCountEntityRequest>();
-
+            CreateMap<BatchIdAppMhResultSuccessCountSearchListRequest, BatchIdAppMhResultSuccessCountEntitySearchListRequest>();
+            CreateMap<BatchIdAppMhResultSuccessCountSearchListFieldModelRequest, BatchIdAppMhResultSuccessCountEntitySearchListFieldModelRequest>();
+                
             // Mailhunter
-            CreateMap<MailhunterLogParseRequest, MailhunterLogParseEntityRequest>();
-            
+            //CreateMap<MailhunterLogParseRequest, MailhunterLogParseEntityRequest>();
+            //CreateMap<MailhunterLogParseSearchListRequest, MailhunterLogParseEntitySearchListRequest>();
+            //CreateMap<MailhunterLogParseSearchListFieldModelRequest, MailhunterLogParseEntitySearchListFieldModelRequest>();
+
             // WorkflowSteps
-            CreateMap<WorkflowStepsSearchListRequest, WorkflowStepsSearchListEntityRequest>();
-            CreateMap<WorkflowStepsSearchListFieldModelRequest, WorkflowStepsSearchListFieldModelEntityRequest>();
+            CreateMap<WorkflowStepsSearchListRequest, WorkflowStepsEntitySearchListRequest>();
+            CreateMap<WorkflowStepsSearchListFieldModelRequest, WorkflowStepsEntitySearchListFieldModelRequest>();
 
             CreateMap<WorkflowUpdateListRequest, UpdateWorkflowListEntityRequest>();
             CreateMap<WorkflowStepsUpdateFieldRequest, WorkflowStepsUpdateFieldEntityRequest>();

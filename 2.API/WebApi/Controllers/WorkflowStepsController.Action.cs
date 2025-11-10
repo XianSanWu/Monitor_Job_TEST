@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.Dto.Responses;
+using static Models.Dto.Requests.MailhunterLogParseRequest;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 using static Models.Dto.Responses.WorkflowStepsResponse;
-using Models.Dto.Requests;
 
 namespace WebApi.Controllers
 {
@@ -132,7 +132,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("WorkflowSteps.Action")]  //分組(可多標籤)        
         [HttpPost("MailhunterLogParseLogAsync")]
-        public async Task<ResultResponse<MailhunterLogParseResponse>> MailhunterLogParseLogAsync(MailhunterLogParseRequest request, CancellationToken cancellationToken)
+        public async Task<ResultResponse<MailhunterLogParseResponse>> MailhunterLogParseLogAsync(MailhunterLogParseSearchListFieldModelRequest request, CancellationToken cancellationToken)
         {
             var jobGuid = Guid.NewGuid().ToString();
 
@@ -151,7 +151,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("WorkflowSteps.Action")]  //分組(可多標籤)        
         [HttpPost("MailhunterLogParseLogListAsync")]
-        public async Task<ResultResponse<MailhunterLogParseResponse>> MailhunterLogParseLogListAsync(MailhunterLogParseRequest request, CancellationToken cancellationToken)
+        public async Task<ResultResponse<MailhunterLogParseResponse>> MailhunterLogParseLogListAsync(MailhunterLogParseSearchListFieldModelRequest request, CancellationToken cancellationToken)
         {
             var jobGuid = Guid.NewGuid().ToString();
 

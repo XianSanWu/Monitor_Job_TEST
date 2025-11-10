@@ -1,4 +1,4 @@
-﻿using Models.Entities.Requests;
+﻿using static Models.Entities.Requests.BatchIdAppMhResultSuccessCountEntityRequest;
 using static Models.Entities.Responses.AppMhProjectEntityResponse;
 using static Models.Entities.Responses.BatchIdAppMhResultSuccessCountEntityResponse;
 
@@ -19,7 +19,7 @@ namespace Repository.Interfaces
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntityRequest req, CancellationToken cancellationToken);
+        Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntitySearchListFieldModelRequest req, CancellationToken cancellationToken);
 
     }
 }

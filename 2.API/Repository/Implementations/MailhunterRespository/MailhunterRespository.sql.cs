@@ -1,6 +1,7 @@
 ﻿using Models.Entities.Requests;
 using Repository.Interfaces;
 using System.Text;
+using static Models.Entities.Requests.BatchIdAppMhResultSuccessCountEntityRequest;
 
 namespace Repository.Implementations.MailhunterRespository
 {
@@ -18,7 +19,7 @@ namespace Repository.Implementations.MailhunterRespository
             _sqlParams?.Add("Tomorrow", tomorrow);
         }
 
-        private void QueryBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntityRequest req)
+        private void QueryBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntitySearchListFieldModelRequest req)
         {
             _sqlStr = new StringBuilder();
             _sqlStr.AppendLine($"SELECT project_id, COUNT(1) AS SuccessCount FROM app_mh_result_{req.ProjectSplitTableId} WITH(NOLOCK) WHERE 1=1");

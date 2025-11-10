@@ -34,7 +34,7 @@ namespace Services.Implementations
         /// <returns></returns>
         public async Task<WorkflowStepsSearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListRequest req, CancellationToken cancellationToken = default)
         {
-            var entityReq = mapper.Map<WorkflowStepsSearchListEntityRequest>(req);
+            var entityReq = mapper.Map<WorkflowStepsEntitySearchListRequest>(req);
 
             #region 流程
             var dbType = DBConnectionEnum.Cdp;

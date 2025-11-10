@@ -15,7 +15,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// <param name="searchReq"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepsEntitySearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsSearchListEntityRequest searchReq, CancellationToken cancellationToken = default)
+        public async Task<WorkflowStepsEntitySearchListResponse> QueryWorkflowStepsSearchList(WorkflowStepsEntitySearchListRequest searchReq, CancellationToken cancellationToken = default)
         {
             #region 參數宣告
 

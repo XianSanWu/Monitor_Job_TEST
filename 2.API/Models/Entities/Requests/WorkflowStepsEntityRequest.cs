@@ -5,12 +5,12 @@ namespace Models.Entities.Requests
     public class WorkflowStepsEntityRequest
     {
         #region 查詢用
-        public class WorkflowStepsSearchListEntityRequest : BaseSearchModel
+        public class WorkflowStepsEntitySearchListRequest : BaseSearchModel
         {
-            public WorkflowStepsSearchListFieldModelEntityRequest? FieldModel { get; set; }
+            public WorkflowStepsEntitySearchListFieldModelRequest? FieldModel { get; set; }
         }
 
-        public class WorkflowStepsSearchListFieldModelEntityRequest
+        public class WorkflowStepsEntitySearchListFieldModelRequest
         {
             public string? Channel { get; set; }
         }

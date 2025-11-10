@@ -5,6 +5,7 @@ using Models.Dto.Requests;
 using Models.Dto.Responses;
 using Models.Enums;
 using System.Text.Json;
+using static Models.Dto.Requests.BatchIdAppMhResultSuccessCountRequest;
 using static Models.Dto.Requests.WorkflowStepsRequest;
 using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 
@@ -262,7 +263,7 @@ namespace WebApi.Controllers
                 foreach (var project in mergedProjectList ?? [])
                 {
                     var batchIdSuccess = await _mailhunterService.GetBatchIdAppMhResultSuccessCount(
-                          new BatchIdAppMhResultSuccessCountRequest
+                          new BatchIdAppMhResultSuccessCountSearchListFieldModelRequest
                           {
                               ProjectId = project.ProjectId
                           }, cancellationToken).ConfigureAwait(false);

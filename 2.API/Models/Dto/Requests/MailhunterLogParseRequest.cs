@@ -1,8 +1,21 @@
-﻿namespace Models.Dto.Requests
+﻿using Models.Common;
+
+namespace Models.Dto.Requests
 {
+
     public class MailhunterLogParseRequest
     {
-        public string? LogContent { get; set; }
-        public List<string>? LogContentList { get; set; }
+        public class MailhunterLogParseSearchListRequest : BaseSearchModel
+        {
+            public MailhunterLogParseSearchListFieldModelRequest? FieldModel { get; set; }
+        }
+
+        public class MailhunterLogParseSearchListFieldModelRequest
+        {
+            public string? LogContent { get; set; }
+            public List<string>? LogContentList { get; set; }
+
+        }
+
     }
 }

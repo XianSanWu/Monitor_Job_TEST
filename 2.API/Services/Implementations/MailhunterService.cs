@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Models.Dto.Requests;
 using Models.Entities.Requests;
 using Models.Enums;
 using Repository.Interfaces;
 using Repository.UnitOfWorkExtension;
 using Services.Interfaces;
+using static Models.Dto.Requests.BatchIdAppMhResultSuccessCountRequest;
 using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
+using static Models.Entities.Requests.BatchIdAppMhResultSuccessCountEntityRequest;
 
 namespace Services.Implementations
 {
@@ -54,9 +55,9 @@ namespace Services.Implementations
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
+        public async Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountSearchListFieldModelRequest req, CancellationToken cancellationToken)
         {
-            var entityReq = mapper.Map<BatchIdAppMhResultSuccessCountEntityRequest>(req);
+            var entityReq = mapper.Map<BatchIdAppMhResultSuccessCountEntitySearchListFieldModelRequest>(req);
 
             #region 流程
             var dbType = DBConnectionEnum.Mail_hunter;

@@ -1,4 +1,4 @@
-﻿using Models.Dto.Requests;
+﻿using static Models.Dto.Requests.BatchIdAppMhResultSuccessCountRequest;
 using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 
@@ -19,7 +19,7 @@ namespace Services.Interfaces
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken);
+        Task<BatchIdAppMhResultSuccessCountSearchResponse> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountSearchListFieldModelRequest req, CancellationToken cancellationToken);
 
     }
 }

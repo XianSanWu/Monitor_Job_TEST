@@ -2,6 +2,7 @@
 using Dapper;
 using Models.Entities.Requests;
 using Repository.Interfaces;
+using static Models.Entities.Requests.BatchIdAppMhResultSuccessCountEntityRequest;
 using static Models.Entities.Responses.AppMhProjectEntityResponse;
 using static Models.Entities.Responses.BatchIdAppMhResultSuccessCountEntityResponse;
 
@@ -46,7 +47,7 @@ namespace Repository.Implementations.MailhunterRespository
         /// <param name="req"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntityRequest req, CancellationToken cancellationToken)
+        public async Task<BatchIdAppMhResultSuccessCountEntity> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountEntitySearchListFieldModelRequest req, CancellationToken cancellationToken)
         {
             #region 參數宣告
 

@@ -15,7 +15,7 @@ namespace Repository.Implementations.WorkflowStepsRespository
         /// 工作進度查詢DB
         /// </summary>
         /// <param name="searchReq"></param>
-        private void QueryWorkflowSql(WorkflowStepsSearchListEntityRequest searchReq)
+        private void QueryWorkflowSql(WorkflowStepsEntitySearchListRequest searchReq)
         {
             _sqlStr = new StringBuilder();
             _sqlStr?.Append(@" SELECT * FROM Workflow WITH (NOLOCK) WHERE 1=1 ");

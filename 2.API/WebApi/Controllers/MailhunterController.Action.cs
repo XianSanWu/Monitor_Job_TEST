@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Models.Dto.Requests;
 using Models.Dto.Responses;
+using static Models.Dto.Requests.BatchIdAppMhResultSuccessCountRequest;
 using static Models.Dto.Responses.AppMhProjectResponse.AppMhProjectSearchListResponse;
 using static Models.Dto.Responses.BatchIdAppMhResultSuccessCountResponse.BatchIdAppMhResultSuccessCountSearchListResponse;
 
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Tags("Mailhunter.Action")]  //分組(可多標籤)        
         [HttpPost("GetBatchIdAppMhResultSuccessCount")]
-        public async Task<ResultResponse<BatchIdAppMhResultSuccessCountSearchResponse>> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountRequest req, CancellationToken cancellationToken)
+        public async Task<ResultResponse<BatchIdAppMhResultSuccessCountSearchResponse>> GetBatchIdAppMhResultSuccessCount(BatchIdAppMhResultSuccessCountSearchListFieldModelRequest req, CancellationToken cancellationToken)
         {
             #region 參數宣告
             var result = new BatchIdAppMhResultSuccessCountSearchResponse();
